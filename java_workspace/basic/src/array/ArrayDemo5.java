@@ -23,7 +23,8 @@ public class ArrayDemo5 {
 		for(int i = 0; i<scores.length; i++) {
 			for(int j = 0; j<scores[i].length; j++) {
 				System.out.println(i + "," + j + "----->" + scores[i][j]);
-
+			total += scores[i][j];
+			
 			}
 		}
 		System.out.println("합계 : " + total);
