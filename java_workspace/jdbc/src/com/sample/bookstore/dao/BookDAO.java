@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.sample.bookstore.app.BookstoreApp;
+import com.sample.bookstore.util.QueryUtil;
 import com.sample.bookstore.util.connectionUtil;
 import com.sample.bookstore.vo.Book;
 
@@ -237,8 +238,26 @@ public class BookDAO {
 		
 	}
 	
+	/**
+	 * 지정된 책정보에 해당하는 책정보를 변경한다.
+	 * @param book 변경할 책정보가 포함된 Book객체
+	 * @throws Exception
+	 */
 	public void updateBook(Book book) throws Exception {
+		Connection connection = connectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("book.updateBook"));	
+		pstmt.setString(1, book.getTitle());
+		pstmt.setString(2, book.getWriter());
+		pstmt.setString(3, book.getPublisher());
+		pstmt.setString(4, book.getGenre());
+		pstmt.setInt(5, book.getPrice());
+		pstmt.setInt(6, book.getDiscountPrice());
+		pstmt.setInt(7, book.getStock());
+		pstmt.setInt(8, book.getNo());
+		pstmt.executeUpdate();
 		
+		pstmt.close();
+		connection.close();
 	}
 	
 	/**
@@ -255,8 +274,9 @@ public class BookDAO {
 		book.setGenre(rs.getString("book_genre"));
 		book.setPublisher(rs.getString("book_publisher"));
 		book.setPrice(rs.getInt("book_price"));
-		book.setPrice(rs.getInt("book_discount_price"));
+		book.setDiscountPrice(rs.getInt("book_discount_price"));
 		book.setRegisteredDate(rs.getDate("book_registered_date"));
+		book.setStock(rs.getInt("book_stock"));
 		
 		return book;
 	}
