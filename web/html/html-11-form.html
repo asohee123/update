@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        label {
+            display: inline-block;
+            width: 250px;
+            text-align: right;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!--
+        입력폼 요소 태그
+            * 사용자가 값을 입력하거나, 체크하거나, 선택할 수 있는 입력요소를 만든다.
+            * 폼태그와 입력요소 태그
+                - 폼태그
+                        * <form></form>
+                        * 사용자의 입력을 받는 입력요소를 가지는 태그다.
+                        * 모든 입력요소들은 <form>태그 안에 정의되어야 한다.
+                        * 주요 속성
+                                <form method="" action="" enctype="">
+                                mdthod : 클라이언트의 요청방식을 결정한다.
+                                        method="GET"
+                                        method="POST"
+                                action : 폼입력값을 처리할 서버의 웹어플리케이션의 주소
+                                        action="logincheck.jsp"
+                                        action="orderbook.jsp"
+                                enctype : 폼입력값의 인코딩방식을 결정한다.
+                                        enctype="application/x-form-urlencoded"
+                                        enctype="multipart/form-data"
+                - 입력요소 태그
+                        * <input />, <select></select>, <textarea></textarea>, <button></button>
+                        * <input> 태그
+                                - 입력필드, 비밀번호필드, 체크박스, 라디오버튼, 첨부파일필드, 날짜필드 등의 입력요소를 생성한다.
+                                - 주요 속성
+                                    <input type="" name="" value="" readonly="readonly" disabled="disabled" />
+                                    type : 입력요소의 타입을 결정한다.
+                                            type="text"     : 입력필드
+                                            type="password" : 비밀번호필드
+                                            type="date"     : 날짜필드
+                                            type="number"   : 숫자필드
+                                            type="checkbox" : 체크박스
+                                            type="radio"    : 라디오버튼
+                                            type="file"     : 첨부파일필드
+                                            type="hidden"   : 숨겨진 입력필드
+                                            type="reset"    : 입력값을 초기상태로 되돌리는 버튼이 된다.
+                                            type="submit"   : 입력값을 웹서버로 제출하는 버튼이 된다.
+                                            
+                                    name : 입력요소의 이름을 정의한다.
+                                           입력값이 서버로 제출될 때 name속성에 지정된 이름과 입력값이 한 쌍으로 구성되어 전달된다.
+                                           모든 입력요소에는 반드시 name속성이 지정되어있어야 한다.
+                                           체크박스, 라디오버튼은 같은 종류의 항목들은 같은 이름으로 설정해야 한다.
+                                    
+                                    value : 입력요소의 값을 정의한다.
+                                            체크박스, 라디오버튼은 선택가능한 값을 미리 지정해 놓아야 한다.
+                                            <input type="file" />은 보안문제로 value값을 미리 지정할 수 없다.
+                                            
+                                    readonly="readonly" : 입력요소를 읽기전용 필드로 지정한다.
+                                                          입력요소의 값을 변경할 수 없다.
+                                                          체크박스, 라디오버튼에서는 readonly 속성의 사용이 무의미하다.
+                                                          (* 값을 수정하는 것이 아니라 미리 나열된 것 중에서 고르는것이기 때문)
+                                                          
+                                    disabled="disabled" : 입력요소를 비활성화시킨다.
+                                    
+                                    checked="checked" : 체크박스와 라디오버튼에서만 사용가능한 속성이다.
+                                                        checked="checked" 속성이 정의된 체크박스와 라디오버튼은 체크상태로 변한다.
+                                                        
+                                    placeholder : 입력값에 대한 힌트를 제공한다.
+                                    
+                        * <select>, <option> 태그
+                                - 드롭다운 리스트를 만든다.
+                                - 사용자에게 선택가능한 리스트를 제공하고, 그 중에서 항목을 선택하게 한다.
+                                - 형식
+                                        <select name="" readonly="readonly" disabled="disabled">
+                                            <option value="값" selected="selected"> 화면에 표시할 내용</option>
+                                            <option value="값" disabled="disabled"> 화면에 표시할 내용</option>
+                                            <option value="값"> 화면에 표시할 내용</option>
+                                            <option value="값"> 화면에 표시할 내용</option>
+                                        /<selcet>
+                                - 주요 속성
+                                        * select 태그의 주요 속성
+                                                name     : 입력요소의 이름을 지정한다.
+                                                disabled : <select>태그를 비활성화 시킨다.
+                                        * option 태그의 주요 속성
+                                                value    : 해당 항목의 값을 지정한다.
+                                                selected : 해당 항목이 미리 선택되어 있게 한다.
+                                                disabled : 해당 항목만 선택할 수 없게 한다.
+                                        * select 태그의 name과 option 태그의 value가 한 쌍으로 구성되어서 서버로 제출된다.
+                                        
+                        * <textarea> 태그
+                                - 여러 줄의 텍스트가 입력가능한 입력필드를 만든다.
+                                - 형식
+                                        <textarea name="" readonly="readonly" disabled="disabled" rows="" cols="" placeholder=""></textarea>
+                                - 주요속성
+                                        * name : 입력필드의 이름을 정의한다.
+                                        * rows : textarea가 표시할 행의 갯수를 지정한다.
+                                        * cols : textarea가 표시할 컬럼의 갯수를 지정한다.
+                                        * value : textarea는 value속성을 사용하지 않는다.
+                                                  <textarea name="">값</textarea>
+                                                  
+                        * button>태그
+                                - 클릭 가능한 버튼을 생성한다
+                                - <button>가 <form>태그안에 있는 경우 폼 입력값을 서버로 제출하는 <input type="submit" /> 처럼 동작한다.
+                                - 형식
+                                        <button disabled type="">버튼이름</button>
+                                - 주요 속성
+                                        type : 버튼의 타입을 지정한다.
+                                                type="button" : 클릭가능한 버튼
+                                                type="reset"  : 폼입력값을 초기화하는 버튼
+                                                type="submit" : 폼입력값을 서버로 제출하는 버튼
+                                                
+                                ex)
+                                <form>
+                                        아이디 : <input type="text" name="id" /> <button type="button">중복체크</button>
+                                        비밀번호 : <input type="password" name="pwd" />
+                                        주소 : <input type="text" name="zipcod" readonly> <button type="button>우편찾기</button>
+                                              <input type="text" name="address1" readonly/>
+                                              <input type="text" name="address2" />
+                                        전화번호 : <input type="text" name="tel" /> <button>본인인증</button>
+                                        <button type="reset">취소</button>
+                                        <button type="submit">등록</button>
+                                </form>     
+                                          
+                                        <button type="button">중복체크</button>
+                                            -아이디 중복체크를 위한 팝업창을 표시하기 위한 용도로 활용할 수 있다.
+                                        <button type="button">우편번호찾기</button>
+                                            - 우편번호 찾기를 위한 팝업창을 표시하기 위한 용도로 활용할 수 있다.
+                                        <button>본인인증</button>
+                                            - 본인인증을 위한 팝업창을 표시하기 위한 용도로 활용될 수 없다.
+                                            - type="button"이라고 지정되어 있지 않으면 폼 입력값을 서버로 제출하는 버튼처럼 동작한다.
+                                        <button type="reset">취소</button>
+                                            - 무조건 폼 입력값을 초기화 해버린다.
+                                        <button type="submit">등록</button>
+                                            - 무조건 폼 입력값을 서버로 제출해버린다.
+                                            
+    -->
+    
+    <h1>폼과 폼입력요소</h1>
+    <h3>input 태그의 다양한 형태</h3>
+    <form method="post" action="register.jsp">
+        <label>입력필드</label> <input type="text"            value="박재형" name="username" /><br/>
+        <label>입력필드</label> <input type="text"            value="박재형" name="username" readonly /><br/>
+        <label>입력필드</label> <input type="text"            value="박재형" name="username" disabled /><br/>
+        
+        <label>비밀번호필드</label> <input type="password"     name="userpwd" placeholder="비밀번호 입력"/><br/>
+        <label>날짜</label> <input type="date"                name="birth"/><br/>
+        
+        <label>체크박스</label> <input type="checkbox"          name="skill" value="java" checked readonly/>자바<br/>
+        <label>체크박스</label> <input type="checkbox"          name="skill" value="python"/>파이썬<br/>
+        <label>체크박스</label> <input type="checkbox"          name="skill" value="javascript"/>자바스크립트<br/>
+        
+        <label>라디오버튼</label> <input type="radio"            name="gender" value="male"/> 남성 <input type="radio" name="gender" value="female" checked/> 여성<br/>
+        <label>라디오버튼</label> <input type="radio"            name="gender" value="male"/> 남성 <input type="radio" name="gender" value="female"/> 여성<br/>
+        
+        <label>근무가능 지역</label> <select name="city">
+                                    <option value="" selected disabled>-- 선택하세요 --</option>
+                                    <option value="1">서울지역</option>
+                                    <option value="2">수도권</option>
+                                    <option value="3">경기도</option>
+                                    <option value="4">전국</option>
+                                    <option value="5">제주도</option>
+                                    <option value="6">산간벽지, 섬</option>
+                                   </select><br />
+        <label>텍스트필드</label><textarea name="memo1" rows="3" cols="30"></textarea><br/>
+        <label>텍스트필드</label><textarea name="memo2" rows="7" cols="60">나는 나다.</textarea><br/>
+        <label>첨부파일입력</label> <input type="file"            name="profilefile"/> <br/>
+        <label>숨김입력필드</label> <input type="hidden"            name="code" value="c001"/> <br/>
+        <label>초기화버튼</label> <input type="reset" value="취소"/><br/>
+        <label>입력값 제출 버튼</label> <input type="submit" value="등록"/><br />
+        <!-- 폼입력값을 서버로 제출한다. -->
+        <label>버튼</label> <button>버튼</button><br />
+        <!-- 클릭가능한 그냥 버튼이 된다. -->
+        <label>버튼</label> <button type="button">버튼</button><br />
+        <!-- 폼입력값을 초기화시킨다. -->
+        <label>버튼</label> <button type="reset">리셋버튼</button><br />
+        <!-- 폼입력값을 서버로 제출한다. -->
+        <label>버튼</label> <button type="submit">제출버튼</button><br />
+    </form>
+</body>
+</html>

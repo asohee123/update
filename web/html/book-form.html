@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<!-- 책 등록폼 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style/bookstore.css" />
+    
+</head>
+<body>
+    <div id="wrapper">
+        <div id="menubar">
+                <ul>
+                    <li><a href="book-list.html">홈</a></li>
+                    <li><a class="active" href="book-form.html">등록</a></li>
+                    <li><a href="book-orders.html">주문현황</a></li>
+                </ul>
+        </div>
+        
+        <div id="contents">
+            <div id="header">
+                <h1>책 - <small>책등록</small></h1>
+            </div>
+            <div class="body well">
+                <form>
+                   
+                    <div class="form-group">
+                        <label> 제목 </label>
+                        <div><input type="text" name="title" /></div>
+                        </div>
+                        
+                    <div class="form-group">
+                        <label> 저자 </label>
+                        <div><input type="text" name="writer" /></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label> 출판사 </label>
+                        <div><input type="text" name="publisher" /></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label> 정상가격 </label>
+                        <div><input type="number" name="price" /></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label> 할인가격 </label>
+                        <div><input type="number" name="discountPrice" /></div>
+                    </div>
+                    
+                    <div class="form-group text-right">
+                        <button type="btn" type="submit">등록</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <div id="footer">
+            <p>중앙 도서대여점</p>
+            <p>주소 : 서울특별시 종로구 율곡로10길 105 디아망4층</p>
+        </div>
+    </div>
+</body>
+</html>

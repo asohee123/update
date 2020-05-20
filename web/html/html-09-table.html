@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        table{
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th{
+            text-align: left;
+            background-color: lightgray;
+        }
+        th, td{
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>다양한 표 만들기</h1>
+    
+    <h3>thead, tbody가 없는 표</h3>
+    <table>
+        <tr>
+            <th>학과</th>
+            <td>전자공학과</td>
+            <td>컴퓨터공학과</td>
+            <td>정보통신공학과</td>
+        </tr>
+        <tr>
+            <th>학과장</th>
+            <td>김교수</td>
+            <td>이교수</td>
+            <td>최교수</td>
+        </tr>
+        <tr>
+            <th>총 재학생 수</th>
+            <td>200명</td>
+            <td>190명</td>
+            <td>180명</td>
+        </tr>
+        <tr>
+            <th>학과별 교수 수</th>
+            <td>20명</td>
+            <td>12명</td>
+            <td>16명</td>
+        </tr>
+    </table>
+    <hr />
+    
+    <h3>가로방향으로 병합된 셀이 있는 표</h3>
+<!--    table>(tr>td*6)*5-->
+        <table>
+           <tr>
+               <td colspan="6">값</td>
+           </tr>
+            <tr>
+                <td colspan="3">값</td>
+                <td colspan="3">값</td>
+            </tr>
+            <tr>
+                <td colspan="2">값</td>
+                <td colspan="4">값</td>
+            </tr>
+            <tr>
+                <td colspan="4">값</td>
+                <td colspan="2">값</td>
+            </tr>
+            <tr>
+                <td colspan="2">값</td>
+                <td colspan="2">값</td>
+                <td colspan="2">값</td>
+            </tr>
+        </table>
+        
+        <hr />
+        
+        <h3>세로방향으로 병합된 셀이 있는 표</h3>
+        <table>
+            <tr>
+                <td rowspan="6"></td>
+                <td rowspan="3"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td rowspan="3"></td>
+                <td rowspan="3"></td>
+                <td rowspan="3"></td>
+                <td rowspan="3"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </table>
+    
+    <h3>병합된 셀이 있는 표</h3>
+    <table>
+        <thead>
+            <table>
+                <tr>
+                    <td rowspan="2">학과명</td>
+                    <td rowspan="2">학년</td>
+                    <td colspan="2">교직원</td>
+                    <td colspan="2">학생</td>
+                </tr>
+                <tr>
+                    <td>교수</td>
+                    <td>강사</td>
+                    <td>재학생</td>
+                    <td>휴학생</td>
+                </tr>
+                <tr>
+                    <td rowspan="4">전자공학과</td>
+                    <td>1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td rowspan="4">기계공학과</td>
+                    <td>1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

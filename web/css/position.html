@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .container {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+        }
+        
+        .container div{
+            margin: 2px;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+        }
+        
+        #box-1 div{
+            position: static;
+        }
+        
+        #box-2 div{
+            position: relative;
+        }
+        
+        #box-3 {
+            position: relative;
+            left: 150px
+        }
+        #box-3 div{
+            position: absolute;
+        }
+        
+        #box-4 {
+            position: fixed;
+            top: 100px;
+            right: 0;
+            width: 150;
+            height: 400px;
+            background-color: yellow;
+        }
+        
+        #box-2 div:nth-child(2){
+            left: 60px;
+        }
+        #box-2 div:nth-child(3){
+            right: -140px;
+        }
+        
+        #box-3 div:nth-child(1) {
+            left: 0;
+            top: 0;
+        }
+        #box-3 div:nth-child(2) {
+            left: 130px;
+            top: 0px;
+        }
+        #box-3 div:nth-child(3) {
+            left: 0px;
+            top: 130px;
+        }
+        #box-3 div:nth-child(4) {
+            left: 130px;
+            top: 130px;
+        }
+
+    </style>
+</head>
+<body>
+   <h1>엘리먼트 위치를 지정하기</h1>
+    
+    <h3>position 속성이 static일 때</h3>
+    <div id="box-1" class="container">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    
+    <h3>position 속성이 relative일 때</h3>
+    <div id="box-2" class="container">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    
+    <h3>position 속성이 absolute일 때</h3>
+    <div id="box-3" class="container">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    
+    <h3>position 속성이 fixed일 때</h3>
+    <div id="box-4" class="container">
+        <div></div>
+        <div></div>
+    </div>
+    
+</body>
+</html>

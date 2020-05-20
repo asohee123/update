@@ -1,0 +1,123 @@
+@charset "utf-8";
+
+#menubar ul{
+    list-style-type: none;    /* 리스트의 블릿을 없앤다. */
+    margin: 0;                /* 바깥여백을 없앤다. */
+    padding: 0;               /* 안쪽여백을 없앤다. */
+    overflow: hidden;         /* 내부 컨텐츠의 높이만큼 늘어난다. */   
+    background-color: #333333;/* 배경색을 검정색에 가까운 색으로 지정한다. */
+}
+
+#menubar li{
+    float: left;              /* li 태그를 왼쪽에서 오른쪽으로 가로방향으로 배치한다. */
+}
+
+#menubar li a{
+    display: block;           /* a태그를 블록엘리먼트로 변신시킨다. */
+    color: white;             /* 글자색을 흰색으로 설정한다. */
+    text-align: center;       /* 글자를 가운데 정렬 시킨다. */
+    padding: 14px 16px;       /* 세로방향, 가로방향 안쪽여백을 지정한다.*/
+    text-decoration: none;    /* 링크의 밑줄을 없앤다. */
+}
+
+.active{
+    background-color: #4CAF50;
+}
+
+#contents {
+    width: 850px;
+    margin: 0 auto;
+}
+
+.btn{
+    padding: 5px 16px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.text-left {
+    text-align: left !important;
+}
+.text-center {
+    text-align: center !important;
+}
+.text-right {
+    text-align: right !important;
+}
+
+.top-5 {
+    margin-top: 5px !important;
+}
+.top-10 {
+    margin-top: 10px !improtant;
+}
+.top-15 {
+    margin-top: 15px !important;
+}
+.top-20 {
+    margin-top: 20px !improtant;
+}
+
+.well {
+    padding: 10px;
+    border: 1px solid right;
+    background-color: #eee;
+    border-radius: 10px;
+}
+
+.form-group{
+    margin: 10px 5px;
+}
+.form-group label{
+    font-weight: bold;
+}
+.form-group div{
+    margin-top: 6px;
+}
+.form-group input[type='text'], .form-group input[type='number'] {
+    width: 100%;
+    height: 30px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: 
+}
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.table tr:hover {
+    background-color: #ddd;
+}
+.table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination {
+    display: inline-block;
+}
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+#footer{
+    margin: 30px 0;
+    background-color: #333;
+    color: white;
+    padding: 16px;
+}

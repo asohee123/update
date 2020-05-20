@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        table{width: 100%;}
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td{
+            padding: 15px;
+        }
+        th{
+            text-align: left;
+            color: white;
+        }
+        tr:nth-child(even){
+            background-color: #dddddd;
+        }
+        thead tr{
+            background-color: #666666;
+        }
+    </style>
+</head>
+<body>
+    <!--
+        표를 담는 태그(table 태그)
+        - <table></table>태그는 표를 정의한다.
+        - <table> 태그는 <thead>, <tbody>, <tfoot>를 자식태그로 가진다.
+        - <table> 태그는 <tr>를 자식태그로 가진다.
+        - <thead> 태그는 <tr>를 자식태그로 가진다.
+        - <tbody> 태그는 <tr>를 자식태그로 가진다.
+        - <tfoot> 태그는 <tr>를 자식태그로 가진다.
+        - <tr> 태그는 <th> 태그를 자식태그로 가진다.
+        - <tr> 태그는 <td> 태그를 자식태그로 가진다.
+        - <th> 태그는 컨텐트를 담는다.
+        - <td> 태그는 컨텐츠를 담는다.
+        * <table> : Table(표)
+        * <thead> : Table Head(표의 머리부분)
+        * <tbody> : Table Body(표의 본문)
+        * <tfoot> : Table Footer(표의 바닥부분)
+        * <tr> : Table Row(표의 행)
+        * <th> : Table Header(표의 제목들)
+        * <td> : Table Data(표의 데이터)
+    -->
+    
+    <h1>표1</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>이메일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>홍길동</td>
+                <td>010-1234-5678</td>
+                <td>hong@gmail.com</td>
+            </tr>
+            <tr>
+                <td>강감찬</td>
+                <td>010-1472-5836</td>
+                <td>kang@gmail.com</td>
+            </tr>
+            <tr>
+                <td>박재형</td>
+                <td>010-1111-2222</td>
+                <td>konapa@naver.com</td>
+            </tr>
+               <tr>
+                <td>박재형</td>
+                <td>010-1111-2222</td>
+                <td>konapa@naver.com</td>
+            </tr>
+               <tr>
+                <td>박재형</td>
+                <td>010-1111-2222</td>
+                <td>konapa@naver.com</td>
+            </tr>
+               <tr>
+                <td>박재형</td>
+                <td>010-1111-2222</td>
+                <td>konapa@naver.com</td>
+            </tr>
+               <tr>
+                <td>박재형</td>
+                <td>010-1111-2222</td>
+                <td>konapa@naver.com</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

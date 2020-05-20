@@ -5,6 +5,7 @@ import java.util.List;
 import com.sample.bookstore.service.BookstoreService;
 import com.sample.bookstore.util.KeyboardUtil;
 import com.sample.bookstore.vo.Book;
+import com.sample.bookstore.vo.Order;
 import com.sample.bookstore.vo.User;
 
 public class Bookstore {
@@ -112,8 +113,46 @@ public class Bookstore {
 				}
 			} else if(menuNo == 5){
 				System.out.println("[내 주문 보기]");
+				
+				System.out.print("사용자 아이디를 입력하세요 : ");
+				String userId = KeyboardUtil.nextString();
+				
+				List<Order> myOrders = service.내주문조회(userId);
+				if(myOrders.isEmpty()) {
+					System.out.println("주문내역이 없습니다.");
+				} else {
+					System.out.println("주문이 완료되었습니다.");
+					System.out.println("-------------------------------------------------------------");
+					System.out.println("주문번호\t책 제목\t수량\t가격\t");
+					for(Order order : myOrders) {
+						System.out.print(order.getNo()+"\t");
+						System.out.print(order.getBook().getTitle()+"\t");
+						System.out.print(order.getPrice()+"\t");
+						System.out.println(order.getAmount()+"\t");
+					}
+					System.out.println("-------------------------------------------------------------");
+				}
+				
 			} else if(menuNo == 6){
 				System.out.println("[주문 정보]");
+				System.out.print("주문번호를 입력하세요 : ");
+				int orderNo = KeyboardUtil.nextInt();
+				
+				Order order = service.주문상세정보(orderNo);
+				if(order == null) {
+					System.out.println("주문번호에 해당하는 주분번호가 없습니다.");
+				} else {
+					System.out.println("-------------------------------------------------------------");
+					System.out.println("주문번호 : " + order.getNo());
+					System.out.println("사용자명 : " + order.getUser().getName());
+					System.out.println("제목 : " + order.getBook().getTitle());
+					System.out.println("가격 : " + order.getBook().getPrice());
+					System.out.println("구매가격 : " + order.getPrice());
+					System.out.println("수량 : " + order.getAmount());
+					System.out.println("주문날짜 : " + order.getRegisteredDate());
+					System.out.println("-------------------------------------------------------------");
+				}
+				
 			} else if(menuNo == 7){
 				KeyboardUtil.close();
 				System.out.println("프로그램을 종료합니다.");

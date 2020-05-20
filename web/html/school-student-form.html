@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        div {
+            margin: 7px 0;
+        }
+    </style>
+</head>
+<body>
+   <div style="width: 600px; margin: 10px auto;">
+       <div> 
+        <!-- header -->
+           <h1>학생 정보 입력폼</h1>
+       </div>
+       <div style="background-color: #eeeeee; padding: 16px; border: 4px solid gray;">
+          <!-- body -->
+           <form>
+               <div>
+                   <!-- 학생이름 -->
+                   <div><label>학생 이름</label></div>
+                   <div><input type="text" name="username" style="width: 100%; height: 30px;"></div>
+               </div>
+               <div>
+                   <!-- 학과 -->
+                   <div><label> 학과 </label></div>
+                   <div>
+                       <select name="dept" style="width: 100%; height: 35px;">
+                           <option value="" selected disabled> -- 선택하세요 -- </option>
+                           <option value="electronic"> 전자공학과 </option>
+                            <option value="infocom"> 정보통신공학과 </option>
+                            <option value="machine"> 기계공학과 </option>
+                            <option value="computer"> 컴퓨터공학과 </option>
+                       </select>
+                   </div>
+               </div>
+               <div>
+                   <!-- 학년 -->
+                   <div><label>학년</label></div>
+                   <label><input type="radio" name="grade" value="1">1학년</label>
+                   <label><input type="radio" name="grade" value="2">2학년</label>
+                   <label><input type="radio" name="grade" value="3">3학년</label>
+                   <label><input type="radio" name="grade" value="4">4학년</label>
+               </div>
+               <div style="text-align: right;">
+                   <button type="submit">등록</button>
+                   <button type="reset">취소</button>
+               </div>
+           </form>
+           </div>
+           <div>
+              <P>
+                  중앙HTA학교 주소 : 서울특별시 종로구 율곡로 10길 105 디아망빌딩 4층
+              </P>
+           </div>
+   </div>
+    
+</body>
+</html>
