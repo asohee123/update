@@ -1,0 +1,91 @@
+package semi.dto;
+
+public class BucketDto {
+	
+	private int productNo;
+	private String productName;
+	private int productPrice;
+	private int productPoint;
+	private String productColor;
+	private String productSize;
+	private int productStock;
+	private int itemNo;
+	private String productImage;
+	
+	public BucketDto() {}
+	
+	
+	public String getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
+
+	public int getItemNo() {
+		return itemNo;
+	}
+
+	public void setItemNo(int itemNo) {
+		this.itemNo = itemNo;
+	}
+
+	public int getProductNo() {
+		return productNo;
+	}
+
+	public void setProductNo(int productNo) {
+		this.productNo = productNo;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public int getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(int productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public int getProductPoint() {
+		return productPoint;
+	}
+
+	public void setProductPoint(int productPoint) {
+		this.productPoint = productPoint;
+	}
+
+	public String getProductColor() {
+		return productColor;
+	}
+
+	public void setProductColor(String productColor) {
+		this.productColor = productColor;
+	}
+
+	public String getProductSize() {
+		return productSize;
+	}
+
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
+	}
+
+	public int getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(int productStock) {
+		this.productStock = productStock;
+	}
+	
+	
+}

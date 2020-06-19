@@ -1,0 +1,2 @@
+order.getSeq=select order_seq.nextval from dual
+

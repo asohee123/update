@@ -1,0 +1,95 @@
+<%@page import="semi.dao.BucketDao"%>
+<%@page import="semi.vo.Bucket"%>
+<%@page import="semi.vo.Item"%>
+<%@page import="semi.dao.ItemDao"%>
+<%@page import="semi.util.NumberUtil"%>
+<%@page import="semi.dto.ProductImgDto"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="/common/navibar.jsp" %>
+<div class="container">
+<%
+	String userId = (String) session.getAttribute("아이디");
+	
+	if (!"Yes".equals(isLogined)) {
+		response.sendRedirect("../user/loginForm.jsp");
+		return;
+	}		
+	
+	int productNo = Integer.parseInt(request.getParameter("productNo"));	
+	ProductDao productDao = new ProductDao();
+	ProductImgDto product = productDao.getProductByNo(productNo);
+	
+	String size = request.getParameter("size");
+	String color = request.getParameter("color");
+	int amount = Integer.parseInt(request.getParameter("amount"));
+
+	ItemDao itemDao = new ItemDao();
+	Item item = itemDao.getItemBySizeAndColor(productNo, color, size);
+	
+	Bucket bucket = new Bucket();
+	bucket.setItemNo(item.getNo());
+	bucket.setProductAmount(amount);
+	bucket.setUserId(userId);
+	
+	BucketDao bucketDao = new BucketDao();
+	bucketDao.addBucket(bucket);
+		
+%>
+	<div class="row justify-content-md-center">
+		<div class="col-4">
+			
+			<h2 class="text-center mb-3">Result Add to Cart</h2>			
+			<p class="text-center font-weight-bold mb-3 ">해당 상품을 구매하였습니다.</p>
+			
+			<div class="card">
+				<img class="card-img-top" src="../resources/<%=product.getImg() %>">
+				<div class="card-body">
+					<p class="font-weight-bold mb-1">시티 자전거 (<%=size %>, <%=color %>)</p>
+					<div class="mb-2">
+						<div>
+							<strong>가격: </strong> 
+							<span class="float-right"><%=NumberUtil.numberWithComma(product.getDiscountPrice()) %> 원</span>
+						</div>
+						<div>
+							<strong>수량: </strong> 
+							<span class="float-right"><%=amount %>개</span>
+						</div>
+						<div>
+							<strong>총 구매가격: </strong> 
+							<span class="float-right"><%=NumberUtil.numberWithComma(product.getDiscountPrice() * amount) %> 원</span>
+						</div>
+					</div>
+				</div>
+			</div>				
+										 
+			<div class="mt-2 mb-5 text-center">
+				<a class="btn btn-primary " href="bucket.jsp" role="button">장바구니 이동</a>							
+				<a class="btn btn-primary text-white " onclick="backToList()" role="button">쇼핑 계속하기</a>							
+			</div>									
+		</div>
+	</div>
+</div>
+
+<%@ include file="/common/footer.jsp" %>
+<script type="text/javascript">
+	function backToList() {
+		history.go(-2);
+	}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="../common/navibar.jsp" %>
+<div class="container">  
+
+	<div>
+		<div class="header">
+			<h1>헤더</h1>
+		</div>
+		<div class="body">
+			<div class="text-center">
+				<div class="row">
+					<div class="col-7"><strong>박재형</strong>님은 현재 <strong>일반 회원</strong> 입니다.</div>
+					<div class="col-5">point 0점</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-1"><button type="button" class="btn">Order</button></div>
+				<div class="col-1"><button type="button" class="btn">Notice</button></div>
+				<div class="col-1"><button type="button" class="btn">Profile</button></div>
+			</div>
+			<div class="text-center">
+				<p> Order List</p>
+			</div>
+			<div>
+				<div class="col-2">
+					<form>
+						<div>
+						  <select name="orderlist" class="custom-select">
+						    <option value="" selected disabled>전체 주문처리상태</option>
+						    <option value="">배송전</option>
+						    <option value="">배송완료</option>
+						  </select>
+						</div>
+					</form>
+					<div>
+					
+					</div>
+				</div>
+				<div></div>
+				<div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th>order tate</th>
+								<th>image</th>
+								<th>product name</th>
+								<th>qty</th>
+								<th>price</th>
+								<th>order state</th>
+								<th>order change</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>2020-06-15</td>
+								<td><img src="../resources/골지브이반팔가디건.jpg" width="130" height="130"></td>
+								<td>골지브이반팔가디건</td>
+								<td>1</td>
+								<td>19000won</td>
+								<td>입금전</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="text-center">
+				<ul class="pagination justify-content-center" style="margin:20px 0">
+				  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+				  <li class="page-item"><a class="page-link" href="#">1</a></li>
+				  <li class="page-item"><a class="page-link" href="#">2</a></li>
+				  <li class="page-item"><a class="page-link" href="#">3</a></li>
+				  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<%@ include file="../common/footer.jsp" %>
+</body>
+</html>

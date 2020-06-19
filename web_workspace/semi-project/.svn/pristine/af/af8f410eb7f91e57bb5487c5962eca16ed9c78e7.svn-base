@@ -1,0 +1,115 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Notice;
+
+public class NoticeDao {
+	
+	public void insertNotice(Notice notice) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.insertNotice"));
+		pstmt.setString(1, notice.getTitle());
+		pstmt.setString(2, notice.getContent());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	public Notice getNoticeByNo(int noticeNo) throws SQLException {
+		Notice notice = null;
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.getNoticeByNo"));
+		pstmt.setInt(1, noticeNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if(rs.next()) {
+			notice = new Notice();
+			notice.setNoticeNo(rs.getInt(1));
+			notice.setTitle(rs.getString(2));
+			notice.setContent(rs.getString(3));
+			notice.setDelYn(rs.getString(4));
+			notice.setRegisteredDate(rs.getDate(5));
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return notice;
+	}
+	
+	public List<Notice> getAllNotice(int begin, int end) throws SQLException {
+		List<Notice> notices = new ArrayList<Notice>();
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.getAllNotice"));
+		pstmt.setInt(1, begin);
+		pstmt.setInt(2, end);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			Notice notice = new Notice();
+			notice.setNoticeNo(rs.getInt(1));
+			notice.setTitle(rs.getString(2));
+			notice.setContent(rs.getString(3));
+			notice.setDelYn(rs.getString(4));
+			notice.setRegisteredDate(rs.getDate(5));
+			
+			notices.add(notice);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return notices;
+	}
+	
+	public void modifyNotice(Notice notice) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.modifyNotice"));
+		pstmt.setString(1, notice.getTitle());
+		pstmt.setString(2, notice.getContent());
+		pstmt.setInt(3, notice.getNoticeNo());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	public void deleteNotice(int noticeNo) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.deleteNotice"));
+		pstmt.setInt(1, noticeNo);
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	public int getTotalRows() throws SQLException {
+		int totalRows = 0;
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt;
+		pstmt = connection.prepareStatement(QueryUtil.getSQL("notice.getTotalRows"));
+		
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		totalRows = rs.getInt("cnt");
+		rs.close();
+		pstmt.close();
+		connection.close();
+		return totalRows;
+	}
+}

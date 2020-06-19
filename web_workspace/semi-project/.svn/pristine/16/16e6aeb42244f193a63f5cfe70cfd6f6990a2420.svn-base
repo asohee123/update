@@ -1,0 +1,30 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.User;
+
+public class UserDao {
+
+	public void insertUser(User user) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("user.insertUser"));
+		pstmt.setString(1, user.getUserId());
+		pstmt.setString(2, user.getPassword());
+		pstmt.setString(3, user.getName());
+		pstmt.setString(4, user.getAddress());
+		pstmt.setString(5, user.getPhone());
+		pstmt.setString(6, user.getEmail());
+		pstmt.setInt(7, user.getBirth());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+}

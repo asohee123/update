@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <style type="text/css">
+  	.top {
+  		margin-top: 200px;
+  	}
+  	.tops {
+  		margin-top: 50px;
+  		margin-bottom: 200px;
+  	}
+  </style>
+</head>
+<body>
+<%@ include file="../common/navibar.jsp" %>
+<div class="container">  
+
+	<div class="text-center">
+		<h3>search</h3>
+	</div>
+	<br>
+	<div class="row justify-content-md-center">
+		<div class="col-5">
+			<div class="row">
+				<div class="col-10">
+					<form action="POST">
+						<div class="row">
+							<div class="col-12">
+								<div>
+									<select class="form-control" name="searchOption">
+					    				<option value="outer"> Outer </option>
+									    <option value="tops"> Tops </option>
+									    <option value="dress"> Dress </option>
+									    <option value="knit"> Knit </option>
+									    <option value="bottoms"> Bottoms </option>
+					  				</select>
+								</div>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-4">
+								<select class="form-control" name="productOption">
+									<option value="name">상품명</option>
+								</select>
+							</div>
+							<div class="col-8">
+								<input type="search" class="form-control" placeholder="검색할 단어를 쓰세요." name="searchname" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-5">
+								<input type="search" class="form-control" placeholder="최소판매가격" name="minmoney" required>
+							</div>
+							<div class="col-5">
+								<input type="search" class="form-control" placeholder="최대판매가격" name="maxmoney" required>
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-12">
+								<select class="form-control" name="selectOption">
+									<option value="" selected="selected" disabled="disabled">※기준 선택※</option>
+									<option value="new">신상품 순</option>
+									<option value="productname">상품명 순</option>
+									<option value="min">낮은가격 순</option>
+									<option value="max">높은가격 순</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-2">
+					<button type="button" class="btn">search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="top">
+	<div class="row">
+		<div class="col-12">
+			<div class="row">
+		
+				<div class="text-left">
+					<h6><strong>total |ITEMS</strong></h6>
+				</div>
+			</div>
+			<br>
+			<div class="tops">
+				<div class="text-center">
+					<h6><small>검색결과가 없습니다.</small></h6>
+					<h6><small>정확한 검색어 인지 확인하시고 다시 검색해 주세요.</small></h6>
+					<p></p>
+					<h6 style="color:LightGray;"><small>검색어/제외검색어의 입력이 정확한지 확인해 보세요.</small></h6>
+					<h6 style="color:LightGray;"><small>두 단어 이상의 검색어인 경우, 띄어쓰기를 확인해 보세요.</small></h6>
+					<h6 style="color:LightGray;"><small>검색옵션을 다시 확인해 보세요.</small></h6>
+				</div>
+			</div>
+		
+		
+		</div>
+	</div>
+	</div>
+</div>
+<%@ include file="../common/footer.jsp" %>
+</body>
+</html>

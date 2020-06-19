@@ -1,0 +1,323 @@
+<%@page import="semi.dao.BucketDao"%>
+<%@page import="semi.vo.User"%>
+<%@page import="semi.dao.UserDao"%>
+<%@page import="semi.dto.BucketDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>Bootstrap 4 Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<% 
+	String loginedUserID = (String)session.getAttribute("아이디");
+
+	UserDao userDao = new UserDao();
+	User findUser = userDao.getUserById(loginedUserID);
+	
+	BucketDao buckets = new BucketDao();
+	List<BucketDto> findbuckets = buckets.getAllbucket();
+	
+%>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+    	<div class="row">
+    		<div class="col-12">
+				<div class="navi text-center" >
+	    				<%@ include file="../common/navibar.jsp" %>
+	    		</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-12">
+    			<div class="header text-center">
+    				<div class="row">
+    					<div class="col-12 pb-3 h2">
+    						Cart
+    					</div>
+    				</div>
+    				<div class="row">
+    					<div class="col-12 pb-3">
+    						<div class="row">
+    							<div class="col-3"></div>
+    							<div class="col-6">
+    								<div class="row">
+    									<div class="col-6 my-auto">
+    										<a href="../user/profile.jsp" style="color: black;"><strong><%=findUser.getName() %></strong>님의 장바구니</a>
+    									</div>
+    									<div class="col-6">
+											<div class="row">
+												<div class="col-12"><a class="text-dark" href="../user/pointHistory.jsp">
+													<strong>보유포인트</strong>
+												</a></div>
+											</div>
+											<div class="row">
+												<div class="col-12">
+													<%=findUser.getPoint() %>
+												</div>
+											</div>    									
+    									</div>
+    								</div>
+    							</div>
+    							<div class="col-3"></div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>	
+    	</div>
+    	<div class="row">
+    		<div class="col-12">
+    			<div class="body text-center">
+					<div class="row">
+						<div class="col-12">
+							<table>
+								<tbody>
+									<tr id="hover">
+										<td style="width: 1.5%"></td>
+										<td style="width: 13%" class="pt-3 pb-3 h5"
+										 onmouseover="hover()" onmouseleave="leave()">장바구니리스트</td>
+										<td style="width: 62.4%"></td>
+										<td><small>장바구니에 담긴 상품은 3일동안 보관됩니다.</small></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<form id="my-form" method="post" action="">
+								<table class="table table-bordered" id="contact-table">
+								  <thead>
+								    <tr>
+								      <th scope="col" style="width: 3.3%">
+								      <input type="checkbox" name="checkall" onchange="toggleChecked()"></th>
+								      <th scope="col" style="width: 6%">image</th>
+								      <th scope="col" style="width: 25.2%">product name</th>
+								      <th scope="col" style="width: 6.6%">price</th>
+								      <th scope="col" style="width: 6.6%">색상</th>
+								      <th scope="col" style="width: 6.6%">사이즈</th>
+								      <th scope="col" style="width: 6.6%">qty</th>
+								      <th scope="col" style="width: 6.6%">point</th>
+								      <th scope="col" style="width: 6.6%">total</th>
+								      <th scope="col" style="width: 5%">order</th>
+								    </tr>
+								  </thead>
+								  <tbody>
+								  <%
+								  	for (BucketDto bucket : findbuckets) {
+								  %>
+								    <tr id="contact-<%=bucket.getItemNo()%>">
+								      <td style="vertical-align: middle;" ><input type="checkbox" name="items" value="<%=bucket.getItemNo() %>" 
+								      onchange="changeAllCheckbox(); displayTotalAmount()"></td>
+								      <td><img src="../resources/<%=bucket.getProductImage() %>" width="100" height="100"></td>
+								      <td><%=bucket.getProductName() %></td>
+								      <td><%=bucket.getProductPrice() %></td>
+								      <td><%=bucket.getProductColor() %></td>
+								      <td><%=bucket.getProductSize() %></td>
+								      <td>
+										<select name="amount" id="amount" class="custom-select">
+											    <% 
+											    	for (int i=1; i<=bucket.getProductStock(); i++) {
+											    %>
+											    	<option><%=i %></option>
+											    <% 
+											    	}
+											    %>
+										</select>
+								      </td>
+								      <td><%=bucket.getProductPoint() %></td>
+								      <td><%=bucket.getProductPrice() * bucket.getProductAmount() %></td>
+								      <td><button type="button" class="btn btn-block btn-primary" 
+								      		style="margin-bottom: 5px;">buy it now</button>
+								          <button type="button" class="btn btn-block btn-danger"
+								          onclick="removeRow(<%=bucket.getItemNo()%>); ">delete</button></td>
+								     </tr>
+								  <%
+								  	}
+								  %>
+								  </tbody>
+								</table>
+								<table class="table">
+									<tr>
+										<td style="text-align: left;"><label style="margin-left: -15px;"></label><button type="button" 
+										class="btn btn-danger ml-1" onclick="removeCheckedRows()">선택상품 삭제하기</button></td>
+										<td style="text-align: right"><button type="button" 
+										class="btn btn-danger" style="margin-right: -10px"
+										onclick="removeAll()">장바구니 비우기</button></td>
+									</tr>
+								</table>
+								<div class="row">
+									<div class="col-3">
+										<table class="table">
+											<tr>
+												<th>보유포인트</th>
+												<td><%=findUser.getPoint() %></td>
+											</tr>
+										</table>
+									</div>
+									<div class="col-7"></div>
+								</div>
+								<table class="table">
+									<tbody>
+										<tr>
+											<th>총 상품금액</th>
+											<th>선택상품합계</th>
+											<th>사용포인트</th>
+											<th>결재예정금액</th>
+										</tr>
+										<tr>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+									</tbody>
+								</table>
+								<table class="table">
+									<tr id="hover1">
+										<td><a href="orderRegister.jsp"><button type="submit" class="btn btn-primary">전체상품주문</button></a></td>
+										<td><a href="orderRegister.jsp"><button type="submit" class="btn btn-primary">선택상품주문</button></a></td>
+										<td><a href="home.jsp"><button type="button" class="btn btn-info">쇼핑계속하기</button></a></td>
+									</tr>
+								</table>
+							</form>
+						</div>
+					</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row"> 
+    		<div class="col-12">
+    			<div class="footer text-center">
+    				<%@ include file="../common/footer.jsp" %>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	function hover() {
+		var hover1 = document.querySelector("#hover td:nth-of-type(2)");
+		hover1.style.backgroundColor = "gray";
+	}
+	
+	function leave() {
+		var leave1 = document.querySelector("#hover td:nth-of-type(2)");
+		leave1.style.backgroundColor = "white";
+	}
+	
+	// 행에서 바로 삭제하기
+	var body = document.querySelector("#contact-table tbody");
+	
+	//전달받은 번호에 해당하는 행을 삭제한다.
+	function removeRow(no) {
+		// 지정된 아이디의 tr을 조회한다.
+		var row = document.querySelector("#contact-" + no);
+		// tbody의 자식엘리먼트 중에서 해당 tr을 삭제한다.
+		body.removeChild(row);
+		
+		
+	}
+	
+	// 체크박스가 체크된 행의 데이터를 삭제하기
+	function removeCheckedRows() {
+		// 모든 체크박스를 조회한다.
+		var checkboxs = document.querySelectorAll("input[name=items]");
+		for (var i=0; i<checkboxs.length; i++) {
+			var checkbox = checkboxs[i];
+			if (checkbox.checked) {
+				var no = checkbox.value;
+				removeRow(no);
+			}
+		}
+		var checkbox = document.querySelector("input[name=checkall]")
+		checkbox.checked = false;
+	}
+	
+	// 제목줄의 전체체크박스의 체크상태가 변경될때마다
+	// 연락처행의 체크박스를 전체선택/전체해제한다.
+	function toggleChecked() {
+		// 제목행의 체크박스를 조회한다.
+		var checkbox = document.querySelector("input[name=checkall]");
+		// 제목행의 체크박스 체크상태를 조회한다.
+		var checkedStatus = checkbox.checked;
+		// 제품행의 모든 체크박스를 조회한다.
+		var checkboxs = document.querySelectorAll("input[name=items]");
+		// 제품행의 모든 checked상태를 제목행의 체크상태와 일치시킨다.
+		for (var i=0; i<checkboxs.length; i++) {
+			checkboxs[i].checked = checkedStatus;
+		}
+
+	}
+	
+	// 체크박스를 선택/해제할 때마다 제목줄의 전체체크박스의 상태를 변경한다.
+	function changeAllCheckbox() {
+		var checkboxs = document.querySelectorAll("input[name=items]");
+		
+		var totalCheckboxCount = checkboxs.length;	// 전체 체크박스 갯수
+		var checkedCount = 0;						// 체크된 체크박스 갯수
+		for(var i=0; i<checkboxs.length; i++) {
+			if(checkboxs[i].checked) {				// 체크박스가 체크된 상태
+				checkedCount++;						// 체크된 체크박스 갯수를 1증가시킨다.
+			}
+		}
+		// 연락처행의 체크박스 갯수와 체크된 체크박스 갯수가 동일하면
+		// 모두 체크된 경우고, 그 외는 하나이상 체크되지 않은 상황이다.
+		var checkbox = document.querySelector("input[name=checkall]");
+		if (totalCheckboxCount == checkedCount) {
+			checkbox.checked = true;
+		} else {
+			checkbox.checked = false;
+		}
+	}
+	
+	function removeAll() {
+		document.querySelector("#contact-table tbody").innerHTML = "";
+	}
+	
+	
+	// 체크된 제품의 금액과 수량을 합하여 계산
+	function displayTotalAmount() {
+		var checkStatus = document.querySelectorAll("input[name=items]")
+		
+		var checkValues = [];
+		
+		for (var i=0; i<checkStatus.length; i++) {
+			if(checkStatus[i].checked) {
+				checkValues[i] = checkStatus[i].value;
+			}
+		}
+		
+		
+		
+	}
+	
+	
+	/*
+	function submitCheck() {
+		var checked = document.querySelectorAll("input[name=items]");
+		
+		for (var i=0; i<checked.length; i++) {
+			if (!checked[i].checked) {
+				checked[i].checked = true;
+			}
+			return true;
+		}
+	}
+	*/
+	
+</script>
+</body>
+</html>

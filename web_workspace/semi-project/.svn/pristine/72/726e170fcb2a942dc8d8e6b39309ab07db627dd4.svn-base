@@ -1,0 +1,64 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Order;
+import semi.vo.OrderProduct;
+
+public class OrderDao {
+	
+	public int getSeq() throws SQLException {
+		
+		int seq = -1;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.getSeq"));
+				
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			seq = rs.getInt(1);
+		}		
+		//		order.getSeq		
+		return seq;
+	}
+	
+	public void insertOrder(Order order) throws SQLException {
+		
+		//order.insertOrder
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.insertOrder"));
+				
+		pstmt.setInt(1, order.getOrderNo());
+		pstmt.setString(2, order.getUserId());
+		pstmt.setInt(3, order.getPrice());
+		pstmt.setInt(4, order.getPoint());
+		pstmt.setInt(5, order.getTotalPrice());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+		
+	}
+
+	public void insertOrderProduct(OrderProduct item) throws SQLException {
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.insertOrderProduct"));
+				
+		pstmt.setInt(1, item.getOrderNo());
+		pstmt.setInt(2, item.getItemNo());
+		pstmt.setInt(3, item.getOrderedAmount());
+		pstmt.setInt(4, item.getOrderedPrice());
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+}

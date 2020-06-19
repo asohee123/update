@@ -1,0 +1,8 @@
+user.insertUser=insert into semi_user \
+				(user_id, user_pwd, user_name, user_addr, user_phone, user_email, user_birth) \
+				values \
+				(?, ?, ?, ?, ?, ?, ?)
+				
+user.getUserById=select * \
+				 from semi_user \
+				 where user_id = ?

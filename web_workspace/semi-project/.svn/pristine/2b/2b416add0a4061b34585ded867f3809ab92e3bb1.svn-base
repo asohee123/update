@@ -1,0 +1,16 @@
+item.getItemBySizeAndColor=select item_no, product_no, product_size, product_color, product_stock \
+						   from semi_product_items \
+						   where product_no = ? \
+						   and product_color = ? \
+						   and product_size = ?
+
+item.getItemByNo=select item_no, product_no, product_size, product_color, product_stock \
+				 from semi_product_items \
+				 where item_no = ?
+						   
+item.updateStock=update semi_product_items \
+				 set \
+				 	product_stock = ? \
+				 where item_no = ?
+				 
+				 

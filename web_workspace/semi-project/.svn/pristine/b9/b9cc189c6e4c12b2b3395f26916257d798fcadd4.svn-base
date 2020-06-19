@@ -1,0 +1,27 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+
+	System.out.println("insertOrder.jsp 페이지");
+	
+	request.setCharacterEncoding("utf-8");
+	String[] itemNos = request.getParameterValues("itemNo");
+	String[] amounts = request.getParameterValues("amount");
+	String[] prices = request.getParameterValues("price");
+	
+	for (int i = 0; i < itemNos.length; i++) {
+		System.out.println(itemNos[i]);
+		System.out.println(amounts[i]);
+		System.out.println(prices[i]);
+	}
+	
+	int totalPrice = Integer.parseInt(request.getParameter("totalPrice"));
+	int point = Integer.parseInt(request.getParameter("point"));
+	
+	System.out.println("totalPrice: "+totalPrice);
+	System.out.println("point: "+point);
+	
+	
+
+
+%>

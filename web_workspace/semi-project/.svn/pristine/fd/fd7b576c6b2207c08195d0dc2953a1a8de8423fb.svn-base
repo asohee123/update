@@ -1,0 +1,117 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="/common/navibar.jsp" %>
+<div class="container">  	
+	<div class="row justify-content-center">
+		<h4>notice</h4>
+	</div>
+	<div class="col-12 mt-5" style="margin-top: 0;">			
+			<div>
+				<table class="table mt-5">
+					<colgroup>
+						<col width="10%">
+						<col width="80%">
+						<col width="10%">
+					</colgroup>
+					<thead >
+						<tr>
+							<th>no</th>
+							<th class="text-center">subject</th>
+							<th>name</th>
+						</tr>
+					</thead>
+					<tbody class="table-borderless">						
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>ㄴ고객님 답변드려요^^</td>
+							<td>dailylook</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>ㄴ고객님 답변드려요^^</td>
+							<td>dailylook</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>ㄴ고객님 답변드려요^^</td>
+							<td>dailylook</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>상품문의</td>
+							<td>홍길동</td>
+						</tr>
+						<tr>
+							<td>124</td>
+							<td>ㄴ고객님 답변드려요^^</td>
+							<td>dailylook</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<%
+				if("admin".equals(userName)) {
+			%>
+			<div class="text-right">
+				<a class="btn btn-primary " href="#" role="button">글 작성</a>			
+			</div>
+			<%
+				}
+			%>
+			<div class="text-center mt-3">
+				<ul class="pagination justify-content-center">
+					<li class="page-item"><a class="page-link" href="#">Previous</a></li>
+					<li class="page-item"><a class="page-link" href="#">1</a></li>
+					<li class="page-item"><a class="page-link" href="#">2</a></li>
+					<li class="page-item"><a class="page-link" href="#">3</a></li>
+					<li class="page-item"><a class="page-link" href="#">Next</a></li>
+				</ul>
+			</div>
+			
+		</div>
+</div>
+<%@ include file="/common/footer.jsp" %>
+</body>
+</html>

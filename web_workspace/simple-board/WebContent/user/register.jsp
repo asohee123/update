@@ -20,11 +20,12 @@
 	}
 	
 		
-		user.setName(name);
-		user.setEmail(email);
 		user.setId(id);
 		user.setPassword(pwd);
+		user.setName(name);
+		user.setEmail(email);
 		
+		// 입력한 아이디로 사용자 정보를 조회했을 쌔 사용자정보가 존재하지 않으면
 		userDao.insertNewUser(user);
 		
 		response.sendRedirect("../home.jsp");

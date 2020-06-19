@@ -1,0 +1,26 @@
+notice.insertNotice=insert into semi_notice (notice_no, notice_title, notice_content) \
+					values (NOTICE_SEQ.nextval, ?, ?)
+
+notice.getAllNotice=select * \
+					from (select notice_no, notice_title, notice_content, \
+      					  notice_delyn, notice_registered_date, \
+      					  row_number() over(order by notice_no desc) rn \
+      					  from semi_notice \
+      					  where notice_delyn = 'N') \
+					where rn >= ? and rn <= ? \
+				    
+notice.getNoticeByNo=select * from semi_notice \
+				     where notice_no = ?
+				     
+notice.modifyNotice=update semi_notice \
+					set notice_title = ?, \
+						notice_content = ? \
+					where notice_no = ?
+					
+notice.deleteNotice=update semi_notice \
+					set notice_delyn = 'Y' \
+					where notice_no = ?
+					
+notice.getTotalRows=select count(*) cnt \
+					from semi_notice \
+					where notice_delyn = 'N'

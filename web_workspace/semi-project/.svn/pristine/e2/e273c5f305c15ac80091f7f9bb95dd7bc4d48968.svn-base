@@ -1,0 +1,44 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Item;
+
+public class ItemDao {
+	
+	public Item getItemBySizeAndColor(int productNo, String color, String size) throws SQLException {
+		
+		Item item = null;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("item.getItemBySizeAndColor"));
+		pstmt.setInt(1, productNo);
+		pstmt.setString(2, color);
+		pstmt.setString(3, size);
+		
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			item = new Item();
+			item.setNo(rs.getInt(1));
+			item.setProductNo(rs.getInt(2));
+			item.setSize(rs.getString(3));
+			item.setColor(rs.getString(4));
+			item.setStock(rs.getInt(5));
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return item;
+		
+	}
+	
+	
+}

@@ -1,0 +1,226 @@
+#product.searchAllProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#    					from semi_product a, semi_product_image b \
+#    					where category_no = ? \
+#    					and a.product_no = b.product_no \
+#    					and a.product_name LIKE '%?%' \
+#    					and a.product_discount_price BETWEEN ? and ? \
+#    					ORDER by a.product_no asc
+#    					
+#product.searchAllProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#						 from semi_product a, semi_product_image b \
+#						 where category_no = ? \
+#						 and a.product_no = b.product_no \
+#						 and a.product_name LIKE '%?%' \
+#						 and a.product_discount_price BETWEEN ? and ? \
+#						 ORDER by a.product_no desc
+#						 
+#prodcut.searchAllProdcutName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							 from semi_product a, semi_product_image b \
+#							 where category_no = ? \
+#							 and a.product_no = b.product_no \
+#							 and a.product_name LIKE '%?%' \
+#							 and a.product_discount_price BETWEEN ? and ? \
+#							 ORDER by a.product_name asc
+#							 
+#product.searchAllProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							from semi_product a, semi_product_image b \
+#							where category_no = ? \
+#							and a.product_no = b.product_no \
+#							and a.product_name LIKE '%?%' \
+#							and a.product_discount_price BETWEEN ? and ? \
+#							ORDER by a.product_discount_price asc
+#							
+#product.searchAllProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							from semi_product a, semi_product_image b \
+#							where category_no = ? \
+#							and a.product_no = b.product_no \
+#							and a.product_name LIKE '%?%' \
+#							and a.product_discount_price BETWEEN ? and ? \
+#							ORDER by a.product_discount_price desc
+#							
+#							
+#							
+#product.searchCategoryProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.category_no = ? \
+#								order by a.product_no asc
+#    					
+#product.searchCategoryProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.category_no = ? \
+#								order by a.product_no desc
+#								
+#product.searchCategoryProductName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								  from semi_product a, semi_product_image b \
+#								  where a.product_no = b.product_no \
+#								  and a.category_no = ? \
+#								  ORDER by a.product_name asc
+#								  
+#product.searchCategoryProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								  from semi_product a, semi_product_image b \
+#								  where a.product_no = b.product_no \
+#								  and a.category_no = ? \
+#								  ORDER by a.product_discount_price asc
+#								  
+#product.searchCategoryProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								  from semi_product a, semi_product_image b \
+#								  where a.product_no = b.product_no \
+#								  and a.category_no = ? \
+#								  ORDER by a.product_discount_price desc
+#								  
+#								  
+#								  
+#product.searchPriceProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							from semi_product a, semi_product_image b \
+#							where a.product_no = b.product_no \
+#							and a.product_discount_price BETWEEN ? and ? \
+#							order by a.product_no asc
+#							
+#product.searchPriceProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							from semi_product a, semi_product_image b \
+#							where a.product_no = b.product_no \
+#							and a.product_discount_price BETWEEN ? and ? \
+#							order by a.product_no desc
+#							
+#product.searchPriceProductName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#							from semi_product a, semi_product_image b \
+#							where a.product_no = b.product_no \
+#							and a.product_discount_price BETWEEN ? and ? \
+#							ORDER by a.product_name asc
+#							
+#product.searchPriceProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_discount_price BETWEEN ? and ? \
+#								ORDER by a.product_discount_price asc
+#								
+#product.searchPriceProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_discount_price BETWEEN ? and ? \
+#								ORDER by a.product_discount_price desc
+#
+#								  
+#								  
+#product.searchNameProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_name LIKE '%?%' \
+#								order by a.product_no asc
+#
+#product.searchNameProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_name LIKE '%?%' \
+#								order by a.product_no desc
+#								
+#product.searchNameProductName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_name LIKE '%?%' \
+#								order by a.product_name asc
+#
+#product.searchNameProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_name LIKE '%?%' \
+#								order by a.product_discount_price asc
+#
+#product.searchNameProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#								from semi_product a, semi_product_image b \
+#								where a.product_no = b.product_no \
+#								and a.product_name LIKE '%?%' \
+#								order by a.product_discount_price desc
+#								  
+#								  
+#								  
+#product.searchCategoryAndNameProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_name LIKE '%?%' \
+#										order by a.product_no asc
+#
+#product.searchCategoryAndNameProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_name LIKE '%?%' \
+#										order by a.product_no desc
+#
+#product.searchCategoryAndNameProductName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_name LIKE '%?%' \
+#										order by a.product_name asc
+#
+#product.searchCategoryAndNameProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_name LIKE '%?%' \
+#										order by a.product_discount_price asc
+#
+#product.searchCategoryAndNameProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_name LIKE '%?%' \
+#										order by a.product_discount_price desc
+#
+#								  
+#								  
+#product.searchCategoryAndPriceProduct=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_discount_price BETWEEN ? and ? \
+#										order by a.product_no asc
+#
+#product.searchCategoryAndPriceProductNew=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_discount_price BETWEEN ? and ? \
+#										order by a.product_no desc
+#
+#product.searchCategoryAndPriceProductName=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_discount_price BETWEEN ? and ? \
+#										order by a.product_name asc
+#
+#product.searchCategoryAndPriceProductMin=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_discount_price BETWEEN ? and ? \
+#										order by a.product_discount_price asc
+#
+#product.searchCategoryAndPriceProductMax=select a.product_name, a.product_price, a.product_discount_price, a.product_description, b.product_img \
+#										from semi_product a, semi_product_image b \
+#										where a.product_no = b.product_no \
+#										and a.category_no = ? \
+#										and a.product_discount_price BETWEEN ? and ? \
+#										order by a.product_discount_price desc
+#								  
+#								  
+#								  
+#product.searchNameAndPriceProduct=
+#product.searchNameAndPriceProductNew=
+#product.searchNameAndPriceProductName=
+#product.searchNameAndPriceProductMin=
+#product.searchNameAndPriceProductMax=
+#
+
+searchProduct.getSearchProduct=select c.product_img, b.product_name, b.product_price, b.product_discount_price, b.product_description, a.category_no, b.product_no \
+						from semi_category a, semi_product b, semi_product_image c \
+						where a.category_no = b.category_no \
+						and b.product_no = c.product_no \
+						and a.category_no = ?
+
+								  

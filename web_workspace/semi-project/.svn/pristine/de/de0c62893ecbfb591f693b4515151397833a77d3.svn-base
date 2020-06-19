@@ -1,0 +1,245 @@
+<%@page import="semi.vo.User"%>
+<%@page import="semi.dao.UserDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>Bootstrap 4 Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<% 
+	String loginedUserId = (String)session.getAttribute("아이디");
+
+	UserDao userDao = new UserDao();
+	
+	User findUser = userDao.getUserById(loginedUserId);
+%>
+
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<div class="row">
+				<div class="col-12">
+					<div class="navi text-center" >
+    					<%@ include file="../common/navibar.jsp" %>
+    				</div>				
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="header text-center">
+						<div class="row">
+							<div class="col-12 pb-3 h2">
+								Profile
+							</div>
+						</div>
+		   				<div class="row">
+		   					<div class="col-12 pb-3">
+		   						<div class="row">
+		   							<div class="col-3"></div>
+		   							<div class="col-6">
+		   								<div class="row">
+		   									<div class="col-8 my-auto">
+		   										<div><span style="font-weight: bold;"><%=findUser.getName() %></span>님은 현재 일반회원입니다.</div>
+		   									</div>
+		   									<div class="col-4">
+												<div class="row">
+													<div class="col-12"><a class="text-dark" href="pointhistory.jsp">
+														<span style="font-weight: bold;">보유포인트</span>
+													</a></div>
+												</div>
+												<div class="row">
+													<div class="col-12 pr-10">
+														<%=findUser.getPoint() %>
+													</div>
+												</div>    									
+		   									</div>
+		   								</div>
+		   							</div>
+		   							<div class="col-3"></div>
+		   						</div>
+		   					</div>
+		   				</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="body">
+						<div class="row">
+				   			<div class="col-3"></div>
+				   				<div class="col-6">
+									<table class="table">
+										<tr class="text-center h4">
+											<th width="33.3%"><a href="../order.jsp">Order</a></th>
+											<th width="33.3%"><a href="#">notice</a></th>
+											<th width="33.3%"><a href="profile.jsp">Profile</a></th>
+										</tr>
+									</table>
+									<form method="post" action="profileModifyForm.jsp">
+									  <div class="form-group row">
+									    <label for="inputEmail3" class="col-sm-2 col-form-label">아이디</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" readonly="readonly" id="inputId" value="<%=findUser.getUserId() %>">
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">비밀번호</label>
+									    <div class="col-sm-10">
+									      <input type="password" class="form-control" id="inputPassword" name="password" onkeyup="valueCheck()">
+									      <p id="message1"></p><p id="message3"></p>
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">비밀번호확인</label>
+									    <div class="col-sm-10">
+									      <input type="password" class="form-control" id="inputPasswordCheck" onkeyup="valueCheck2()">
+									      <p id="message2"></p>
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">이름</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" readonly="readonly" id="inputName" value="<%=findUser.getName()%>">
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">주소</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" id="inputAddr" name="address" value="<%=findUser.getAddress()%>">
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">휴대전화</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" id="inputPhoneNumber" name="phoneNumber" value="<%=findUser.getPhone()%>">
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <label for="inputPassword3" class="col-sm-2 col-form-label">이메일</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control" id="inputEmail" name="email" value="<%=findUser.getEmail()%>">
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <div class="col-sm-2">이메일 수신여부</div>
+									    <div class="col-sm-3">
+									      <div class="form-check">
+									        <input class="form-check-input" type="checkbox" id="agree">
+									        <label class="form-check-label" for="gridCheck1">
+												동의함
+									        </label>
+									      </div>
+									    </div>
+									    <div class="col-sm-3">
+									    	<div class="form-check">
+									        <input class="form-check-input" type="checkbox" id="disagree">
+									        <label class="form-check-label" for="gridCheck2">
+												동의안함
+									        </label>
+									      </div>
+									    </div>
+									  </div>
+									  <div class="form-group row">
+									    <div class="col-4"></div>
+									    <div class="col-2">
+									      <button type="submit" class="btn btn-primary">Modify</button>
+									    </div>	
+									    <div class="col-3">
+									      <a href="../home.jsp"><button type="button" class="btn btn-primary">Cancel</button></a>
+									    </div>
+									    <div class="col-3">
+									      <button type="button" class="btn btn-primary">Drop out</button>
+									    </div>
+									  </div>
+								</form>
+				   				</div>
+				   			<div class="col-3"></div>
+				   		</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="footer text-center">
+						<%@ include file="../common/footer.jsp" %>
+					</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+</div>
+<script type="text/javascript">
+		
+	
+	function valueCheck() {
+		var text = document.querySelector("#inputPassword").value;
+		var el = document.querySelector("#message1");
+		
+		if (text.length >= 1 && text.length < 8) {
+			el.textContent = "길이가 너무 짧습니다.";
+			el.style.color = "red";
+			return;
+		} else if (text.length == 0) {
+			el.textContent = "";
+			return;
+		} else {
+			el.textContent = "";
+			return;
+		}
+	}
+	
+	
+	
+	function valueCheck2() {
+		var text1 = document.querySelector("#inputPassword").value;
+		var text2 = document.querySelector("#inputPasswordCheck").value;
+		
+		var el = document.querySelector("#message2");
+		
+		if (text1 != text2) {
+			el.textContent = "비밀번호가 일치하지 않습니다.";
+			el.style.color = "red";
+			return;
+		} else if (text1 == text2) {
+			el.textContent = "비밀번호가 일치합니다";
+			el.style.color = "blue";
+			return;
+		}
+		
+	}
+	
+	
+	/*
+	function submitCheck(event) {
+		
+		event.preventDefault();
+		console.log(event.target);
+		console.log(event.type);
+		
+		
+		var el1 = document.querySelector("#message1");
+		var el2 = document.querySelector("#message2");
+		
+		console.log(el1.textContent);
+		console.log(el2.textContent);
+		
+		if ("길이가 너무 짧습니다." == el2.textContent || "비밀번호가 일치하지 않습니다." == el2.textContent) {
+			alert("비밀번호를 다시 확인해주세요");
+			return false;
+		} else {
+			return true;
+		}
+	}
+	*/
+	
+</script>
+</body>
+</html>

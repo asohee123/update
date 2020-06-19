@@ -1,0 +1,92 @@
+<%@page import="semi.vo.User"%>
+<%@page import="semi.dao.UserDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="/common/navibar.jsp" %>
+<div class="container">  	
+<%
+	request.setCharacterEncoding("utf-8");
+	
+	String type = request.getParameter("type");
+	String userId = request.getParameter("id");
+	String name = request.getParameter("name");	
+	
+	UserDao dao = new UserDao();
+	User user = dao.getUserById(userId);
+	
+	if ((user==null) || (!name.equals(user.getName()))) {		
+		response.sendRedirect("findPasswordForm.jsp?error=notFound");
+		return;
+	}
+	
+	if ("emailType".equals(type)) {
+		String email = request.getParameter("email");
+		if (!email.equals(user.getEmail())) {
+			response.sendRedirect("findPasswordForm.jsp?error=notFound");
+			return;
+		}
+	} else if ("phoneType".equals(type)) {
+		String phone = request.getParameter("phone");
+		if (!phone.equals(user.getPhone())) {
+			response.sendRedirect("findPasswordForm.jsp?error=notFound");
+			return;
+		}
+	}	
+%>	
+	<div class="row justify-content-md-center">
+		<div class="col-5">
+			
+			<h2 class="text-center mb-5">Change Password</h2>			
+					
+			<form id="pwdForm" action="changePassword.jsp" method="post"
+				onsubmit="return checkPassword();">	
+				<input type="hidden" name="id" value="<%=userId %>">		
+				<div class="form-group">
+			    	<label for="pwd">새 비밀번호:</label>
+			    	<input type="password" class="form-control" placeholder="Enter password" name="newPassword" id="newpwd1">
+			  	</div>
+				<div class="form-group">
+			    	<label for="pwd">비밀번호 확인:</label>
+			    	<input type="password" class="form-control" placeholder="Enter password" name="newPassword2" id="newpwd2">
+			  	</div>	 
+			  	
+			  	<div id="errorText">			  		
+			  	</div>	
+			  			  	
+			  	<button type="submit" class="btn btn-primary btn-block">ok</button>
+			</form>					
+			
+		</div>
+	</div>
+</div>
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function checkPassword() {
+		
+		var pwd = document.getElementById("newpwd1");
+		var pwd2 = document.getElementById("newpwd2");
+		
+		if (pwd.value != pwd2.value) {
+			document.getElementById("errorText").innerHTML='<p class="alert alert-danger">비밀번호가 일치하지 않습니다.</p>';
+			return false;
+		} 		
+		return true;		
+	}	
+</script>
+</body>
+</html>

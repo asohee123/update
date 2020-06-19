@@ -1,0 +1,7 @@
+bucket.getAllbucket=select a.bucket_no, e.product_img, c.product_name, c.product_price, b.product_color, b.product_size, a.product_amount, c.product_point, \
+					 b.product_stock \
+				from semi_bucket a, semi_product_items b, semi_product c, semi_user d, semi_product_image e \
+				where a.item_no = b.item_no \
+				and b.product_no = c.product_no \
+				and a.user_id = d.user_id \
+				and c.product_no = e.product_no

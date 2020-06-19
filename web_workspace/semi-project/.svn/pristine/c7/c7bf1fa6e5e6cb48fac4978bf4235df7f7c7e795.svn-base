@@ -1,0 +1,31 @@
+<%@page import="semi.vo.User"%>
+<%@page import="semi.dao.UserDao"%>
+<%@page import="semi.util.NumberUtil"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%
+	request.setCharacterEncoding("utf-8");
+
+	String loginedUserId = (String)session.getAttribute("아이디");
+	
+	String password = request.getParameter("password");
+	String address = request.getParameter("address");
+	String phondNumber = request.getParameter("phoneNumber");
+	String email = request.getParameter("email");
+	
+	UserDao userDao = new UserDao();
+	User finduser = userDao.getUserById(loginedUserId);
+	
+	User user = new User();
+	user.setUserId(loginedUserId);
+	user.setPassword(password);
+	user.setAddress(address);
+	user.setPhone(phondNumber);
+	user.setEmail(email);
+	
+	userDao.updateUserProfile(user);
+	
+	response.sendRedirect("../home.jsp");
+	
+%>

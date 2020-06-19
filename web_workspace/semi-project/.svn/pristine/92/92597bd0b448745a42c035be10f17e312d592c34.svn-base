@@ -1,0 +1,69 @@
+product.getAllProducts=select product_img, product_name, product_price, \
+				       product_discount_price, product_description, \
+				       category_no, product_no \
+					   from (select b.product_img, a.product_name, a.product_price, \
+				       		 a.product_discount_price, \
+					   		 a.product_description, a.category_no, a.product_no, \
+				       		 row_number() over(order by a.product_no desc) rn \
+				       		 from semi_product A, semi_product_image B \
+				       		 where a.product_no = b.product_no) \
+					   where rn >= ? and rn <= ?
+					  
+product.getAllProductsByCategory=select product_img, product_name, product_price, \
+       							 product_discount_price, product_description, \
+       							 category_no, product_no \
+								 from (select b.product_img, a.product_name, a.product_price, \
+       							 	   a.product_discount_price, \
+	   							 	   a.product_description, a.category_no, a.product_no, \
+       								   row_number() over(order by a.product_no desc) rn \
+       								   from semi_product A, semi_product_image B \
+       								   where a.product_no = b.product_no \
+       								   and a.category_no = ?) \
+  								 where rn >= ? and rn <= ?
+					   
+product.getProduct=select a.product_no, a.product_name, a.product_price, a.product_point, c.product_color, c.product_size, c.product_stock, c.item_no, b.product_img \
+					from semi_product a, semi_product_image b, semi_product_items c \
+					where a.product_no = b.product_no \
+					and c.product_no = a.product_no \
+					and a.product_no = 10000
+					
+product.insertProduct=insert into semi_product \
+					  (product_no, product_name, product_price, product_discount_price, product_point, product_description, category_no) \
+					  values \
+					  (PRODUCT_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?)
+					
+product.insertImage=insert into semi_product_image \
+					(product_no, product_img) \
+					values \
+					(?, ?)
+					
+#add category_no column(2020/06/18)			   
+product.getProductByNo=select A.product_no, A.product_name, A.product_price, A.product_discount_price, \
+        			   A.product_point, A.product_description, A.category_no, B.product_img \
+					   from semi_product A, semi_product_image B \
+					   where A.product_no = B.product_no \
+					   and A.product_no = ?
+
+product.getTotalRows=select count(*) cnt \
+					 from semi_product
+		
+product.getTotalRowsByCategory=select count(*) cnt \
+							   from semi_product \
+							   where category_no = ?
+
+product.getNewProductNos=select product_no \
+						 from (select rownum, product_no \
+    						   from semi_product \
+    						   where category_no = ? \
+    						   order by product_no desc) \
+						 where rownum <=3							   
+
+product.getTagsByProductNo=select tag_name, a.product_no \
+						   from semi_product A, semi_product_tag B \
+						   where a.product_no = b.product_no \
+						   and a.product_no = ?
+						   
+product.getLastProductNo=select product_no \
+						 from (select product_no, row_number() over(order by product_no desc) rn \
+     						   from semi_product) \
+						 where rn = 1

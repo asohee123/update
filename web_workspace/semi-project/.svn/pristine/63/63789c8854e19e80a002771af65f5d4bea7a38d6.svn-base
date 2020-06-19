@@ -1,0 +1,22 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="semi.dto.ProductDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.util.NumberUtil"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%
+	int categoryNo = NumberUtil.stringToInt(request.getParameter("categoryno"));
+	System.out.println(categoryNo);
+	ProductDao productDao = new ProductDao();
+	
+	List<ProductDto> dto = productDao.getSearchProduct(categoryNo);
+
+	System.out.println(dto.get(1).getpName());
+	
+	Gson gson = new Gson();
+	
+	String jsonContent = gson.toJson(dto);
+	
+	out.write(jsonContent);
+%>

@@ -1,0 +1,75 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<style>
+	p {
+		font-size: 13px;
+	}
+	del {
+		color:lightgray;
+		font-size: 13px;
+	}
+</style>
+</head>
+<body>
+<%@ include file="/common/navibar.jsp" %>
+<div class="container">  
+	<div class="row">
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+  	</div>
+	<div class="row">
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+	    <div class="col-sm-4 text-center">
+	    	<img class="img-thumbnail" src="resources/골지브이반팔가디건.jpg">
+	    	<p>로로러블리원피스</p>
+	    	<p>우아한 홀가먼트 여름 쿨니트 원단으로 제작.</p>
+	    	<del>82,000 won</del>
+	    	<p>72,000 won</p>	    	
+	    </div>
+  	</div>
+</div>
+<%@ include file="/common/footer.jsp" %>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<h1>객체</h1>
+	
+	<script type="text/javascript">
+		var x = {
+			a: 10,
+			b: 20,
+			plus: function(){				// 메소드
+				console.log("더하기 실행");
+				console.log(this.a+this.b);
+			},
+			minuse: function(){				// 메소드
+				console.log("빼기 실행");
+				console.log(this.a-this.b);
+			}
+		}
+		
+		// 객체에 메소드 실행
+		x.plus();
+		x.minuse();
+		
+		// 객체에 새로운 메소드를 추가하기
+		x.mltiple = function(){
+			console.log("곱하기 실행");
+			console.log(this.a*this.b);
+		}
+		
+		x.mltiple();
+	</script>
+</body>
+</html>

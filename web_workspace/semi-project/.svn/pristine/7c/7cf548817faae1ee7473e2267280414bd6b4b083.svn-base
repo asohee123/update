@@ -1,0 +1,46 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="../common/navibar.jsp" %>
+<div class="container">  
+
+	<div class="text-center">
+		<h3>search</h3>
+	</div>
+	<div class="row justify-content-md-center">
+		<div class="col-10">
+			<form action="POST">
+				<div class="row">
+					<div class="col-12">
+						<div>
+							<select class="form-control" name="searchOption">
+			    				<option value="outer"> Outer</option>
+							    <option value="tops"> Tops </option>
+							    <option value="dress"> Dress </option>
+							    <option value="knit"> Knit </option>
+							    <option value="bottoms"> Bottoms </option>
+			  				</select>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-2">
+			<button type="button" class="btn">search</button>
+		</div>
+	</div>
+</div>
+<%@ include file="../common/footer.jsp" %>
+</body>
+</html>

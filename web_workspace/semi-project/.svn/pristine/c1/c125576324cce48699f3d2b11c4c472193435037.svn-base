@@ -1,0 +1,130 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.dto.OrderListDto;
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Order;
+import semi.vo.OrderProduct;
+
+public class OrderDao {
+	
+	public int getSeq() throws SQLException {
+		
+		int seq = -1;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.getSeq"));
+				
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			seq = rs.getInt(1);
+		}		
+		//		order.getSeq		
+		return seq;
+	}
+	
+	public void insertOrder(Order order) throws SQLException {
+		
+		//order.insertOrder
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.insertOrder"));
+				
+		pstmt.setInt(1, order.getOrderNo());
+		pstmt.setString(2, order.getUserId());
+		pstmt.setInt(3, order.getPrice());
+		pstmt.setInt(4, order.getPoint());
+		pstmt.setInt(5, order.getTotalPrice());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+		
+	}
+
+	public void insertOrderProduct(OrderProduct item) throws SQLException {
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.insertOrderProduct"));
+				
+		pstmt.setInt(1, item.getOrderNo());
+		pstmt.setInt(2, item.getItemNo());
+		pstmt.setInt(3, item.getOrderedAmount());
+		pstmt.setInt(4, item.getOrderedPrice());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	public Order getOrderByNO(int orderNo) throws SQLException {
+		
+		Order order = null;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.getOrderByNo"));
+		
+		pstmt.setInt(1, orderNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			order = new Order();
+			order.setOrderNo(rs.getInt(1));
+			order.setUserId(rs.getString(2));
+			order.setPrice(rs.getInt(3));
+			order.setPoint(rs.getInt(4));
+			order.setTotalPrice(rs.getInt(5));
+			order.setOrderDate(rs.getDate(6));
+			order.setDeliveryYn(rs.getString(7));				
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return order;
+		
+	}
+	
+	public List<OrderListDto> getOrderList(String userid) throws SQLException {
+		
+		List<OrderListDto> lists = new ArrayList<OrderListDto>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("order.getOrderListUser"));
+		pstmt.setString(1, userid);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			
+			OrderListDto orderList = new OrderListDto();
+			orderList.setImg(rs.getString(1));
+			orderList.setProductName(rs.getString(2));
+			orderList.setSzie(rs.getString(3));
+			orderList.setColor(rs.getString(4));
+			orderList.setOrderNo(rs.getInt(5));
+			orderList.setOrderDate(rs.getDate(6));
+			orderList.setOrderPrice(rs.getInt(7));
+			orderList.setStock(rs.getInt(8));
+			orderList.setDelivery_yn(rs.getString(9));
+			
+			lists.add(orderList);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return lists;
+	}
+	
+}

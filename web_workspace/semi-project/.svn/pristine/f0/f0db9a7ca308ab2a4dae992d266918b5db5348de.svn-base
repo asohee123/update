@@ -1,0 +1,40 @@
+<%@page import="semi.dao.ItemDao"%>
+<%@page import="semi.vo.Item"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@page import="semi.vo.Product"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%
+	request.setCharacterEncoding("utf-8");
+	
+	// 상품등록 register
+	String productName = request.getParameter("productname");
+	int price = Integer.parseInt(request.getParameter("price"));
+	int discountPrice = Integer.parseInt(request.getParameter("discountprice"));
+	int point = Integer.parseInt(request.getParameter("point"));
+	String description = request.getParameter("description");
+	int categoryNo = Integer.parseInt(request.getParameter("category"));
+	
+	Product product = new Product();
+	product.setProductName(productName);
+	product.setPrice(price);
+	product.setDiscountPrice(discountPrice);
+	product.setPoint(point);
+	product.setDescription(description);
+	product.setCategoryNo(categoryNo);
+	
+	ProductDao productDao = new ProductDao();
+	productDao.insertProduct(product);
+	
+	// 상품재고 register
+	int stock = Integer.parseInt(request.getParameter("stock"));
+	
+	Item item = new Item();
+	item.setStock(stock);
+	
+	ItemDao itemDao = new ItemDao();
+	itemDao.insertStock(item);
+	
+	response.sendRedirect("home.jsp");
+%>

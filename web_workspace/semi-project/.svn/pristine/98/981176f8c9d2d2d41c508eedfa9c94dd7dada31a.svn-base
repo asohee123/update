@@ -1,0 +1,5 @@
+product.getAllProducts=select b.product_img, a.product_name, a.product_price, \
+					   a.product_discount_price, \
+					   a.product_description, a.category_no, a.product_no \
+					   from semi_product A, semi_product_image B \
+					   where a.product_no = b.product_no

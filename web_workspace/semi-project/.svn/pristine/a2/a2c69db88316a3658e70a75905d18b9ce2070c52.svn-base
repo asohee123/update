@@ -1,0 +1,17 @@
+order.getSeq=select order_seq.nextval seq from dual
+
+order.insertOrder=insert into semi_order \
+				  (order_no, user_id, order_price, order_point_use, order_total_price) \
+				  values \
+				  (?, ?, ?, ?, ?)
+
+order.insertOrderProduct=insert into semi_ordered_product \
+						 (ordered_product_no, order_no, item_no, \
+						 ordered_amount, ordered_price) \
+						 values \
+						 (ordered_product_seq.nextval, ?, ?, ?, ?)
+
+order.getOrderByNo=select order_no, user_id, order_price, order_point_use, \
+				   order_total_price, order_date, delivery_yn \
+				   from semi_order \
+				   where order_no = ?

@@ -1,0 +1,41 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.dto.ProductDto;
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+
+public class ProductDao {
+	
+	public List<ProductDto> getAllProducts() throws SQLException {
+		List<ProductDto> products = new ArrayList<ProductDto>();
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getAllProducts"));
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			ProductDto product = new ProductDto();
+			product.setImg(rs.getString(1));
+			product.setpName(rs.getString(2));
+			product.setPrice(rs.getInt(3));
+			product.setDiscountPrice(rs.getInt(4));
+			product.setDescription(rs.getString(5));
+			product.setCategory(rs.getInt(6));
+			product.setProductNo(rs.getInt(7));
+			
+			products.add(product);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return products;
+	}
+}

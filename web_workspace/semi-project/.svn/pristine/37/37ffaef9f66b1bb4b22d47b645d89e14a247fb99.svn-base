@@ -1,0 +1,43 @@
+product.getAllProducts=select product_img, product_name, product_price, \
+				       product_discount_price, product_description, \
+				       category_no, product_no \
+					   from (select b.product_img, a.product_name, a.product_price, \
+				       		 a.product_discount_price, \
+					   		 a.product_description, a.category_no, a.product_no, \
+				       		 row_number() over(order by a.product_no) rn \
+				       		 from semi_product A, semi_product_image B \
+				       		 where a.product_no = b.product_no) \
+					   where rn >= ? and rn <= ?
+					  
+product.getAllProductsByCategory=select product_img, product_name, product_price, \
+       							 product_discount_price, product_description, \
+       							 category_no, product_no \
+								 from (select b.product_img, a.product_name, a.product_price, \
+       							 	   a.product_discount_price, \
+	   							 	   a.product_description, a.category_no, a.product_no, \
+       								   row_number() over(order by a.product_no) rn \
+       								   from semi_product A, semi_product_image B \
+       								   where a.product_no = b.product_no \
+       								   and a.category_no = ?) \
+  								 where rn >= ? and rn <= ?
+					   
+product.getProduct=select a.product_no, a.product_name, a.product_price, a.product_point, c.product_color, c.product_size, c.product_stock, c.item_no, b.product_img \
+					from semi_product a, semi_product_image b, semi_product_items c \
+					where a.product_no = b.product_no \
+					and c.product_no = a.product_no \
+					and a.product_no = 10000
+					
+					   
+product.getProductByNo=select A.product_no, A.product_name, A.product_price, A.product_discount_price, \
+        			   A.product_point, A.product_description, B.product_img \
+					   from semi_product A, semi_product_image B \
+					   where A.product_no = B.product_no \
+					   and A.product_no = ?
+
+product.getTotalRows=select count(*) cnt \
+					 from semi_product
+		
+product.getTotalRowsByCategory=select count(*) cnt \
+							   from semi_product \
+							   where category_no = ?
+							   

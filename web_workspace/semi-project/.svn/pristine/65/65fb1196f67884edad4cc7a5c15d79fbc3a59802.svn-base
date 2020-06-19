@@ -1,0 +1,9 @@
+#SEMI_REVIEW
+review.getReviewsByProdNo=select A.review_no, A.review_content, B.user_name, A.review_registered_date \
+						  from semi_review A, semi_user B \
+						  where A.user_id = B.user_id \
+						  and A.product_no = ?						 
+review.insertReview=insert into semi_review \
+					(review_no, user_id, product_no, review_content ) \
+					values \
+					(REVIEW_SEQ.NEXTVAL, ?, ?, ?)

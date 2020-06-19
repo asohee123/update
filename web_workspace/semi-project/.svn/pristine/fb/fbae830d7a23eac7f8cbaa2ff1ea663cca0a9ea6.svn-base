@@ -1,0 +1,109 @@
+package semi.dto;
+
+public class BucketDto {
+	
+	private int bucketNo;
+	private String productName;
+	private int productPrice;
+	private int productPoint;
+	private String productColor;
+	private String productSize;
+	private int productAmount;
+	private int itemNo;
+	private String productImage;
+	private int productStock;
+	private int productNo;
+
+	public BucketDto() {}
+	
+	public int getProductNo() {
+		return productNo;
+	}
+
+	public void setProductNo(int productNo) {
+		this.productNo = productNo;
+	}
+
+	public int getProductStock() {
+		return productStock;
+	}
+
+	public void setProductStock(int productStock) {
+		this.productStock = productStock;
+	}
+
+	public int getProductAmount() {
+		return productAmount;
+	}
+
+	public void setProductAmount(int productAmount) {
+		this.productAmount = productAmount;
+	}
+
+	public String getProductImage() {
+		return productImage;
+	}
+
+	public void setProductImage(String productImage) {
+		this.productImage = productImage;
+	}
+
+	public int getItemNo() {
+		return itemNo;
+	}
+
+	public void setItemNo(int itemNo) {
+		this.itemNo = itemNo;
+	}
+
+	public int getBucketNo() {
+		return bucketNo;
+	}
+
+
+	public void setBucketNo(int bucketNo) {
+		this.bucketNo = bucketNo;
+	}
+
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public int getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(int productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public int getProductPoint() {
+		return productPoint;
+	}
+
+	public void setProductPoint(int productPoint) {
+		this.productPoint = productPoint;
+	}
+
+	public String getProductColor() {
+		return productColor;
+	}
+
+	public void setProductColor(String productColor) {
+		this.productColor = productColor;
+	}
+
+	public String getProductSize() {
+		return productSize;
+	}
+
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
+	}
+	
+}

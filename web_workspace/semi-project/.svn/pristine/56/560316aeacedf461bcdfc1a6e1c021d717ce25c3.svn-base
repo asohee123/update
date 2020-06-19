@@ -1,0 +1,196 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.dto.BucketDto;
+import semi.dto.ProductDto;
+import semi.dto.ProductImgDto;
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+
+public class ProductDao {
+		
+	public List<ProductDto> getAllProducts(int categoryNo, int begin, int end) throws SQLException {
+		List<ProductDto> products = new ArrayList<ProductDto>();
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt;
+		if(categoryNo == 0) {
+			pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getAllProducts"));
+			pstmt.setInt(1, begin);
+			pstmt.setInt(2, end);
+		} else {
+			pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getAllProductsByCategory"));
+			pstmt.setInt(1, categoryNo);
+			pstmt.setInt(2, begin);
+			pstmt.setInt(3, end);
+		}
+		
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			ProductDto product = new ProductDto();
+			product.setImg(rs.getString(1));
+			product.setpName(rs.getString(2));
+			product.setPrice(rs.getInt(3));
+			product.setDiscountPrice(rs.getInt(4));
+			product.setDescription(rs.getString(5));
+			product.setCategory(rs.getInt(6));
+			product.setProductNo(rs.getInt(7));
+			
+			products.add(product);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return products;
+	}
+
+	public ProductImgDto getProductByNo(int productNo) throws SQLException {
+		
+		ProductImgDto product = null;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getProductByNo"));
+		pstmt.setInt(1, productNo);
+		
+		ResultSet rs = pstmt.executeQuery();
+		
+		if (rs.next()) {
+			product = new ProductImgDto();
+			product.setProductNo(rs.getInt(1));
+			product.setProductName(rs.getString(2));
+			product.setPrice(rs.getInt(3));
+			product.setDiscountPrice(rs.getInt(4));
+			product.setPoint(rs.getInt(5));
+			product.setDescription(rs.getString(6));
+			product.setCategoryNo(rs.getInt(7));
+			product.setImg(rs.getString(8));			
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return product;
+		
+	}
+	
+	public int getTotalRows(int categoryNo) throws SQLException {
+		int totalRows = 0;
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt;
+		if(categoryNo == 0) 
+			pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getTotalRows"));
+		else {
+			pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getTotalRowsByCategory"));
+			pstmt.setInt(1, categoryNo);
+		}
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		totalRows = rs.getInt("cnt");
+		rs.close();
+		pstmt.close();
+		connection.close();
+		return totalRows;
+	}
+	
+	public List<ProductDto> getSearchProduct(int categoryNo, String searchPname, int minMoney, int maxMoney) throws SQLException {
+		
+			List<ProductDto> searchProducts = new ArrayList<ProductDto>();
+			int count = 1;
+			
+			Connection connection = ConnectionUtil.getConnection();
+			PreparedStatement pstmt;
+			
+			String sql = "select c.product_img, b.product_name, b.product_price, b.product_discount_price, b.product_description, a.category_no, b.product_no, "
+						+ "from semi_category a, semi_product b, semi_product_image c "
+						+ "where a.category_no = b.category_no "
+						+ "and b.product_no = c.product_no ";
+						 if(categoryNo != 0) {
+							 
+							 sql += "and a.category_no = ? ";
+							 count++;
+						 }
+							 
+						 if(searchPname != null) {
+							 
+							 sql += "and a.product_name LIKE '%?%' ";
+							 count++;
+						 }
+						 
+						 if(minMoney != 0 && maxMoney != 0){
+							 
+							 sql += "and a.product_discount_price BETWEEN ? and ?";
+							 count += 2;
+						 }		
+			
+			pstmt= connection.prepareStatement(sql);
+			pstmt.setInt(1, categoryNo);
+			pstmt.setString(2, searchPname);
+			pstmt.setInt(3, minMoney);
+			pstmt.setInt(4, maxMoney);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				
+				ProductDto productDto = new ProductDto();
+				
+				productDto.setImg(rs.getString("product_img"));
+				productDto.setpName(rs.getString("product_name"));
+				productDto.setPrice(rs.getInt("product_price"));
+				productDto.setDiscountPrice(rs.getInt("product_discount_price"));
+				productDto.setDescription(rs.getString("product_description"));
+				productDto.setCategory(rs.getInt("category_no"));
+				productDto.setProductNo(rs.getInt("product_no"));
+				
+				searchProducts.add(productDto);
+			}
+			
+			rs.close();
+			pstmt.close();
+			connection.close();
+			
+			return searchProducts;
+	}
+	
+	/***
+	 * 해당 카테고리에 최근 입고된 상품번호 상위 3개 반환 
+	 * 상위 개수 수정하려면 product.getNewProductNos의 rownum 수정하고 아래의 newProductNos 크기도 수정
+	 * @param categoryNo
+	 * @return
+	 * @throws SQLException
+	 */
+	public int[] getNewProductNos(int categoryNo) throws SQLException {
+		
+		// 카테고리별로 신상품 3개씩
+		int[] newProductNos = new int[3];
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("product.getNewProductNos"));
+		
+		pstmt.setInt(1, categoryNo);		
+		ResultSet rs = pstmt.executeQuery();
+		
+		int i = 0;
+		while (rs.next()) {			
+			newProductNos[i] = rs.getInt(1);
+			i++;			
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();		
+		
+		return newProductNos;
+		
+	}
+	
+}

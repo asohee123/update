@@ -57,4 +57,20 @@ public class UserDao {
 		connection.close();
 	}
 	
+	public void updateUser(User user) throws SQLException{
+		
+		Connection connection = connectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("user.updateUser"));
+		pstmt.setString(1, user.getPassword());
+		pstmt.setString(2, user.getEmail());
+		pstmt.setString(3, user.getDisabled());
+		pstmt.setString(4, user.getId());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+		
+	}
+	
 }
