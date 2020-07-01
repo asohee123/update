@@ -1,0 +1,23 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Answer;
+
+public class AnswerDao {
+	public void insertAnswer(Answer answer) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("answer.insertAnswer"));
+		pstmt.setInt(1, answer.getQuestionNo());
+		pstmt.setString(2, answer.getAnswerTitle());
+		pstmt.setString(3, answer.getAnswerContent());
+		
+		pstmt.executeUpdate();
+		pstmt.close();
+		connection.close();
+	}
+}

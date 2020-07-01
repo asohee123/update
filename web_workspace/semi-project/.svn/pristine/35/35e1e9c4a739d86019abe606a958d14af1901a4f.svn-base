@@ -1,0 +1,85 @@
+item.getItemBySizeAndColor=select item_no, product_no, product_size, product_color, product_stock \
+						   from semi_product_items \
+						   where product_no = ? \
+						   and product_color = ? \
+						   and product_size = ?
+
+item.getItemByNo=select item_no, product_no, product_size, product_color, product_stock \
+				 from semi_product_items \
+				 where item_no = ?
+				 
+item.insertStock1=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'M', 'black', ?) 
+
+item.insertStock2=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'M', 'white', ?)
+
+item.insertStock3=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'L', 'black', ?)
+
+item.insertStock4=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'L', 'white', ?)
+
+item.insertStock5=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'XL', 'black', ?)
+
+item.insertStock6=insert into semi_product_items \
+				  (item_no, product_no, product_size, product_color, product_stock) \
+				  values \
+				  (PRODUCT_ITEM_SEQ.nextval, ?, 'XL', 'white', ?)
+		
+item.updateStock=update semi_product_items \
+             	 set \
+                 product_stock = ? \
+             	 where item_no = ?
+             	  
+item.updateStock1=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'black' \
+				  and product_size = 'M'
+				  
+item.updateStock2=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'white' \
+				  and product_size = 'M'
+				  
+item.updateStock3=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'black' \
+				  and product_size = 'L'
+				  
+item.updateStock4=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'white' \
+				  and product_size = 'L'
+				  
+item.updateStock5=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'black' \
+				  and product_size = 'XL'
+				  
+item.updateStock6=update semi_product_items \
+				  set product_stock = ? \
+				  where product_no = ? \
+				  and product_color = 'white' \
+				  and product_size = 'XL'
+				  
+item.updateStockAboutOneItem=update semi_product_items \
+							  set product_stock = ? \
+							  where item_no = ?
+				 

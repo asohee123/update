@@ -1,0 +1,17 @@
+package semi.dto;
+
+public class OrderDto {
+	
+	private int count;
+	
+	public OrderDto() {}
+	
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+}

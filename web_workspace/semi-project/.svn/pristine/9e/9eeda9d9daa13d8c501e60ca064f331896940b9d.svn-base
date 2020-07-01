@@ -1,0 +1,33 @@
+pointHistory.insertHistory=insert into semi_point_history \
+			 			   (history_no, user_id, history_reason, history_change, order_no) \
+			 			   values \
+			 			   (POINT_HISTORY_SEQ.nextval, ?, ?, ?, ?)
+			 			   
+pointHistory.getLastSeqNumOfOrderNo=select order_no \
+									from (select order_no, row_number() over(order by order_no desc) rn \
+										from semi_order) \
+									where rn = 1
+									
+pointHistory.getPointHistoryByLoginedId=select history_reason, history_change, order_no \
+										from semi_point_history \
+										where user_id = ? \
+										order by order_no
+
+pointHistory.getTotalPointHistoryByLoginedId=select count(*) cnt \
+											from semi_point_history \
+											where user_id = ?
+										
+pointHistory.getPointHistoryByLoginedIdWithPaging=select history_reason, history_change, order_no, rn \
+													from (select history_reason, history_change, order_no, \
+        													row_number() over(order by order_no desc) rn \
+        													from semi_point_history \
+        													where user_id = ?) \
+													where rn >= ? and rn <= ?
+
+pointHistory.getPointHistoryByLoginedIdAndOrderNoAndHistoryReason=select history_no, user_id, history_reason, history_change, history_date, order_no \
+																	from semi_point_history \
+																	where user_id = ? \
+																	and order_no = ? \
+																	and history_reason = ?														
+													
+											

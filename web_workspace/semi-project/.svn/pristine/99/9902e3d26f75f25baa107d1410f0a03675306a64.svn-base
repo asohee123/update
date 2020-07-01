@@ -1,0 +1,4 @@
+answer.insertAnswer=insert into semi_answer \
+					(product_no, answer_content, answer_title) \
+					values \
+					(?, ?, ?)

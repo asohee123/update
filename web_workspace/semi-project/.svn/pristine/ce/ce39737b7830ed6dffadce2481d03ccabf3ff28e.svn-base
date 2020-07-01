@@ -1,0 +1,530 @@
+<%@page import="semi.dto.ProductImgDto"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@page import="semi.vo.Category"%>
+<%@page import="semi.dao.CategoryDao"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="semi.dto.ProductSalesDto"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.JsonArray"%>
+<%@page import="semi.dto.CategorySalesDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.SalesDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body onload="showChart()">
+<%@ include file="/common/adminProcess.jsp" %>
+<%@ include file="/common/navibar.jsp" %>
+<%@ include file="/common/fixedbar.jsp" %>
+<%
+	SalesDao salesDao = new SalesDao();
+	CategoryDao categoryDao = new CategoryDao();
+	ProductDao productDao = new ProductDao();
+	List<Category> categorys = categoryDao.getAllCategorys();
+	List<CategorySalesDto> sales = salesDao.getSalesByCategory();
+	//List<ProductSalesDto> productSales = salesDao.getTotalProductSales();
+	
+	// CategorySalesDto에  매출액을 추가한다.
+	for( CategorySalesDto sale : sales) {
+		sale.setTotalSales(salesDao.getTotalSalesByCategoryNo(sale.getCategoryNo()));		
+	}
+			
+	// 최종 출력할 CategoryDto 배열
+	List<CategorySalesDto> finalSales = new ArrayList<CategorySalesDto>();
+	
+	for (Category category : categorys) {
+		CategorySalesDto finalSale = new CategorySalesDto();
+		finalSale.setCategoryNo(category.getCategoryNo());
+		finalSale.setCategoryName(category.getCategoryName());
+		finalSale.setSales(0);
+		finalSale.setTotalSales(0);	
+		
+		for (CategorySalesDto original : sales) {			
+			if (original.getCategoryNo() == finalSale.getCategoryNo()) {
+				finalSale.setSales(original.getSales());
+				finalSale.setTotalSales(original.getTotalSales());
+			}
+		}	
+		
+		finalSales.add(finalSale);
+	}
+	
+%>
+
+<div class="container">  
+	<nav class="navbar navbar-expand justify-content-center navbar-light">
+	  	<ul class="navbar-nav">
+		    <li class="nav-item">
+		      <a class="nav-link" href="home.jsp">관리</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="../product/registerForm.jsp" style="padding-left: 40px;">상품등록</a>
+		    </li>
+		    <li class="nav-item" style="padding-left: 40px; padding-right: 40px">
+		      <a class="nav-link" href="../product/deliver.jsp">배송관리</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link disabled"  href="salesByCategory.jsp">통계</a>
+		    </li>
+	  	</ul>
+	</nav>
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				//System.out.println("sales/home.jsp");
+				for (CategorySalesDto sale : finalSales) {
+					//System.out.println(sale.getCategoryNo() +" "+ sale.getSales());
+					List<ProductSalesDto> hotFive = salesDao.getAllProductSalesByCategoryNo(sale.getCategoryNo());
+			%>					
+				<div class="form-group row">
+					<label for="<%=sale.getCategoryNo() %>"><%=sale.getCategoryName() %></label>
+					<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+					<input type="number" id="<%=sale.getCategoryNo() %>TotalSales"
+					value="<%=sale.getTotalSales() %>" />	
+					
+					<!-- categoryNo 가져오기 -->
+					<input type="text" name="categoryNos" value="<%=sale.getCategoryNo() %>">			
+				</div>
+				
+			<%			
+					String productRanking = "";
+					// 5위 까지만 얻기
+					for (int i = 0; i<5; i++) {							
+					// product img와  name과  매출액 가져와서 value에 지정
+						productRanking = sale.getCategoryNo()+"hot"+i;
+						//System.out.println(productRanking);
+						ProductImgDto product = productDao.getProductByNo(hotFive.get(i).getProductNo());
+						
+					
+			%>			
+				<div class="form-group row">
+					<input type="number"
+					value="<%=hotFive.get(i).getTotalSales() %>" 
+					name="<%=product.getProductName() %>"
+					id="<%=productRanking %>"
+					disabled/>
+					
+					<input type="text" id="<%=productRanking %>Img"
+					value="<%=product.getImg() %>" />	
+				</div>
+			<%
+					}
+				}
+				
+				String totalRanks = "";				
+				List<ProductSalesDto> allProudctSales = salesDao.getTotalProductSales();
+				for (int i = 0 ; i < 3; i++) {
+					totalRanks="total"+i;
+					ProductSalesDto productSale =  allProudctSales.get(i); 
+					ProductImgDto product = productDao.getProductByNo(allProudctSales.get(i).getProductNo());
+					
+			%>	
+				<div class="form-grop row">
+					<input type="number"
+					id="<%=totalRanks %>"
+					value="<%=productSale.getTotalSales()%>"
+					name="<%=product.getProductName() %>"
+					/>
+					<input type="text" 
+					id="<%=totalRanks %>img"
+					value="<%=product.getImg() %>"
+					/>
+				</div>
+			<%
+				}
+			%>
+			</form>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-6">		
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 총 판매량</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChart">							
+					</canvas>																		      
+				</div>
+			</div>				
+		</div>
+		
+		<div class="col-6">
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 총 매출액</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChartSales">							
+					</canvas>																		      
+				</div>
+			</div>					
+		</div>		
+	</div>	
+	
+	<div class="row justify-content-md-center mt-5 mb-3">		
+		
+		<div class="col-12 text-center" >
+			<div class="card border-dark" >
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 총 매출 Top3</h6>
+				</div>				
+				<!-- 매출 카드 시작 -->	
+				<div class="card-body">
+					<div class="row justify-content-md-center">
+						<div class="col-4">
+							<div class="card border-danger">
+								<div class="card-header bg-danger text-white">
+									All
+								</div>
+								<img class="card-img-top" 
+								src="" id="allRanking1Img">
+								<div class="card-body" id="allBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card ">
+								<div class="card-header">
+									Outer
+								</div>
+								<img class="card-img-top" 
+								src="" id="outerRanking1Img">
+								<div class="card-body" id="outerBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Top
+								</div>
+								<img class="card-img-top" 
+								src="" id="topRanking1Img">
+								<div class="card-body" id="topBody">
+									
+								</div>
+							</div>
+						</div>
+												
+					</div>
+					<div class="row justify-content-md-center mt-5">
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Dress
+								</div>
+								<img class="card-img-top" 
+								src="" id="dressRanking1Img">
+								<div class="card-body" id="dressBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Knit
+								</div>
+								<img class="card-img-top" 
+								src="" id="knitRanking1Img">
+								<div class="card-body" id="knitBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Bottoms
+								</div>
+								<img class="card-img-top" 
+								src="" id="bottomsRanking1Img">
+								<div class="card-body" id="bottomsBody">
+									
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div> <!-- 매출 카드 끝 -->
+				
+			</div>								
+		</div>			
+		
+	</div> <!-- 매출 관련 div 끝 -->		
+</div>	
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function showChart() {
+		var colors = ['blue','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+			
+		/* 도넛 차트 세팅 */
+		var donutOptions = { 
+				cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+				legend: {position:'bottom', 
+						padding:5, 
+						labels: {pointStyle:'circle', 
+						usePointStyle:true}
+				} 
+		}; 		
+		
+		// CategoryNos 가져오기
+		var categoryNos = document.getElementsByName("categoryNos");
+		
+		console.log("CategoryNos 테스트 시작");
+		for (var i = 0; i<categoryNos.length; i++) {
+			console.log(categoryNos[i].value);
+		}
+		console.log("CategoryNos 테스트 끝");
+		
+		// CategoryNo에 해당하는 Element가져오기				
+		var categoryEls = new Array();
+		console.log("CategoryEls 테스트 시작");
+		for (var i = 0; i<categoryNos.length; i++) {
+			categoryEls[i] = document.getElementById(categoryNos[i].value);
+			// 테스트 출력
+			console.log(categoryEls[i].id);
+		}
+		console.log("CategoryEls 테스트 끝");
+		
+		// CategoryNo에 해당하는 매출액 가져오기
+		var categorySales = new Array();
+		var categorySalesValue = new Array();		
+		console.log("CategorySales 테스트 시작");
+		for (var i = 0; i<categoryNos.length; i++) {
+			categorySales[i] = document.getElementById(categoryNos[i].value+"TotalSales");
+			categorySalesValue[i] = categorySales[i].value;
+			// 테스트 출력
+			console.log(categorySales[i].id);
+		}
+		console.log("CategorySales 테스트 끝");
+		
+		// 카테고리 라벨들 가져오기
+		var categoryLabels = new Array();
+		console.log("CategoryLabels 테스트 시작");
+		for (var i = 0; i<categoryEls.length; i++) {
+			categoryLabels[i] = categoryEls[i].name;
+			// 테스트 출력
+			console.log(categoryLabels[i]);
+		}
+		console.log("CategoryLabels 테스트 끝")
+		
+		// 카테고리 판매량 가져오기
+		var categoryValues = new Array();
+		console.log("categoryValues 테스트 시작");
+		for (var i = 0; i<categoryEls.length; i++) {
+			categoryValues[i] = categoryEls[i].value;
+			// 테스트 출력
+			console.log(categoryValues[i]);
+		}
+		console.log("categoryValues 테스트 끝")
+		
+			
+		// myChart				
+		// 카테고리별 판매량
+		var myChartData = { 
+				labels: categoryLabels, 
+				datasets: [ { backgroundColor: colors.slice(0,5),
+							borderWidth: 0, 
+							data: categoryValues 
+							} ] 
+		}; 
+		
+		var myChart = document.getElementById("myChart"); 	
+		if (myChart) { 
+			new Chart(myChart, { 
+				type: 'pie', 
+				data: myChartData, 
+				options: donutOptions 
+				}); 
+			} 
+		
+		// 카테고리별 매출액
+		var ctx = document.getElementById("myChartSales"); 
+		var myChart2 = new Chart(ctx, {
+			type: 'bar',
+			data : {
+				labels: categoryLabels,
+				datasets: [{ label: 'Total Sales per Category ',
+							data: categorySalesValue, 
+							backgroundColor: [ 'rgba(255, 99, 132, 0.2)', 
+								'rgba(54, 162, 235, 0.2)', 
+								'rgba(255, 206, 86, 0.2)', 
+								'rgba(75, 192, 192, 0.2)', 
+								'rgba(153, 102, 255, 0.2)', 
+								'rgba(255, 159, 64, 0.2)' ], 
+							borderColor: [ 'rgba(255, 99, 132, 1)', 
+								'rgba(54, 162, 235, 1)', 
+								'rgba(255, 206, 86, 1)', 
+								'rgba(75, 192, 192, 1)', 
+								'rgba(153, 102, 255, 1)', 
+								'rgba(255, 159, 64, 1)' ], 
+							borderWidth: 1 
+						}]
+			},
+			options: { 
+				scales: { 
+					yAxes: [{ 
+						ticks: { 
+							beginAtZero: true 
+							} 
+					}] 
+				} 
+			}
+
+		});	
+		
+		// 인기순위 1~5위 가져오기
+		var hotRankings = [];
+		
+		console.log("핫랭킹 가져오기 시작");
+		for (var i = 0; i < categoryNos.length; i++){
+			hotRankings.push([]);
+			for (var j = 0; j<5; j++ ) {
+				//console.log(categoryNos[i].value+"hot"+j);
+				hotRankings[i][j] = document.getElementById(categoryNos[i].value+"hot"+j);
+				console.log(hotRankings[i][j].id);
+			}		
+		}		
+		console.log("핫랭킹 가져오기 끝");
+		
+		// 전체 인기순위 1~3가져오기
+		var allRanks = new Array();
+		//var allRankImgs = new Array();
+		console.log("전체랭킹 가져오기 시작");
+		for (var i = 0; i < 3; i++){
+			allRanks[i] = document.getElementById("total"+i);
+			//allRankImgs[i] = document.getElementById("total"+i+"img");		
+			console.log(allRanks[i].id);
+			//console.log(allRankImgs[i].id);
+		}		
+		console.log("전체랭킹 가져오기 끝");
+		
+		// 각 카테고리별 랭킹 세팅
+		var outerbody = document.querySelector("#outerBody");
+		var topbody = document.querySelector("#topBody");
+		var dressbody = document.querySelector("#dressBody");
+		var knitbody = document.querySelector("#knitBody");
+		var bottomsbody = document.querySelector("#bottomsBody");
+		// 전체 랭킹 세팅
+		var allbody = document.querySelector("#allBody");
+		
+		
+		var outerText = "";
+		for (var i = 0 ; i<3; i++) {
+			outerText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+ hotRankings[0][i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(hotRankings[0][i].value)+"원</span></div>";
+		}
+		outerBody.innerHTML = outerText;
+		
+		var topText = "";
+		for (var i = 0 ; i<3; i++) {
+			topText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+ hotRankings[1][i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(hotRankings[1][i].value)+"원</span></div>";
+		}
+		topBody.innerHTML = topText;
+		
+		var dressText = "";
+		for (var i = 0 ; i<3; i++) {
+			dressText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+ hotRankings[2][i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(hotRankings[2][i].value)+"원</span></div>";
+		}
+		dressBody.innerHTML = dressText;
+		
+		var knitText = "";
+		for (var i = 0 ; i<3; i++) {
+			knitText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+ hotRankings[3][i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(hotRankings[3][i].value)+"원</span></div>";
+		}
+		knitBody.innerHTML = knitText;
+		
+		var bottomsText = "";
+		for (var i = 0 ; i<3; i++) {
+			bottomsText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+ hotRankings[4][i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(hotRankings[4][i].value)+"원</span></div>";
+		}
+		bottomsBody.innerHTML = bottomsText;
+		
+		// 전체 랭킹 세팅
+		var allText = ""
+		for (var i = 0 ; i<3; i++) {
+			allText += "<div><strong class='float-left'>"
+				+ (i+1) +"위 "+allRanks[i].name
+				+"</strong> <span  class='float-right'>"
+				+ numberWithCommas(allRanks[i].value)+"원</span></div>";
+		}
+		allBody.innerHTML = allText;
+		
+		
+		// 카테고리별 이미지 세팅
+		var categoryTopImgs = new Array();
+		for (var i = 0; i<categoryNos.length; i++) {
+			categoryTopImgs[i] = document.getElementById(categoryNos[i].value+"hot0Img");
+			//console.log(categoryTopImgs[i].value);
+		}
+		
+		var outerImgCanvas = document.getElementById("outerRanking1Img")	
+		var topImgCanvas = document.getElementById("topRanking1Img")
+		var dressImgCanvas = document.getElementById("dressRanking1Img")		
+		var knitImgCanvas = document.getElementById("knitRanking1Img")		
+		var bottomsImgCanvas = document.getElementById("bottomsRanking1Img")			
+				
+		outerImgCanvas.src = "../resources/"+categoryTopImgs[0].value
+		topImgCanvas.src = "../resources/"+categoryTopImgs[1].value;
+		dressImgCanvas.src = "../resources/"+categoryTopImgs[2].value;
+		knitImgCanvas.src = "../resources/"+categoryTopImgs[3].value;
+		bottomsImgCanvas.src = "../resources/"+categoryTopImgs[4].value;
+		
+		// 전체 1위 이미지 세팅
+		var allImgCanvas = document.getElementById("allRanking1Img");	
+		allImgCanvas.src = "../resources/"+document.getElementById("total0img").value;
+		
+		console.log("showchart끝");	
+		
+	}
+
+	function numberWithCommas(x) {
+	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	
+</script>
+
+
+
+
+</body>
+</html>

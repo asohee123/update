@@ -1,0 +1,12 @@
+answer.insertAnswer=insert into semi_answer \
+					(answer_no, question_no, answer_content, answer_title) \
+					values \
+					(ANSWER_SEQ.NEXTVAL, ?, ?, ?)
+					
+answer.getAllAnswer=select a.question_no, c.answer_no, answer_title, answer_content \
+				    from semi_question a, semi_user b, semi_answer c \
+				    where a.question_delyn = 'N' \
+				    and a.user_id = b.user_id \
+                    and a.question_no = c.question_no \
+				    and a.product_no = ? \
+				    order by a.question_no desc

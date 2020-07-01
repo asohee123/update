@@ -1,0 +1,27 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.PointHistory;
+
+public class PointHistoryDao {
+
+	public void insertHistory(PointHistory history) throws SQLException{
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("pointHistory.insertHistory"));
+		
+		pstmt.setString(1, history.getUserId());
+		pstmt.setString(2, history.getReason());
+		pstmt.setInt(3, history.getChange());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+}

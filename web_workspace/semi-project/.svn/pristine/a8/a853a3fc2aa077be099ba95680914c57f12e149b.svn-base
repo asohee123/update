@@ -1,0 +1,239 @@
+<%@page import="semi.dto.DaySales"%>
+<%@page import="semi.util.NumberUtil"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="semi.dto.ProductSalesDto"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.JsonArray"%>
+<%@page import="semi.dto.CategorySalesDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.SalesDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body onload="showChart()">
+<%@ include file="/common/navibar.jsp" %>
+<%
+	
+	SalesDao salesDao = new SalesDao();
+	List<CategorySalesDto> sales = salesDao.getSalesByCategory();
+	
+	for( CategorySalesDto sale : sales) {
+		sale.setTotalSales(salesDao.getTotalSalesByCategoryNo(sale.getCategoryNo()));
+	}
+	
+	
+	
+%>
+
+<div class="container">  
+
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				//System.out.println("sales/home.jsp");
+				for (CategorySalesDto sale : sales) {
+					System.out.println(sale.getCategoryNo() +" "+ sale.getSales());
+					List<ProductSalesDto> hotFive = salesDao.getAllProductSalesByCategoryNo(sale.getCategoryNo());
+			%>					
+				<div class="form-group row">
+					<label for="<%=sale.getCategoryNo() %>"><%=sale.getCategoryName() %></label>
+					<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+					<input type="number" id="<%=sale.getCategoryNo() %>TotalSales"
+					value="<%=sale.getTotalSales() %>" />
+					
+			<%
+					//for (int i = 0; i<5; i++) {		
+					// product img와  name과  매출액 가져와서 value에 지정
+			%>					
+					
+					
+				</div>
+			<%
+					
+				}
+			%>	
+			</form>
+		</div>
+	</div>
+	
+	<!-- 최근 일주일 관련 정보 -->
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				List<DaySales> daySales = salesDao.getRecentWeekSales();
+				int dayCount= 6;
+				String dayId = "DayAgo";
+				for (DaySales daySale : daySales) {
+					dayId=dayCount+"DayAgo";					
+			%>					
+				<div class="form-group row">
+					<input type="number" id="<%=dayId %>"
+					name="<%=daySale.getDay() %>" 
+					value="<%=daySale.getDaySales() %>"/>
+				</div>
+			<%
+					dayCount--;
+					System.out.println(dayId);
+				}
+			%>
+			</form>
+		</div>
+	</div>
+	
+	<div class="row justify-content-md-center">
+		<div class="col-3">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">총 매출액</h6>
+				</div>
+				<img class="card-img-top" 
+				src="../resources/images/goods/goods1.jpg">
+				<div class="card-body">
+					<h6 class="card-title text-center">
+					<%=NumberUtil.numberWithComma(salesDao.getTotalSales())%> 원</h6>            
+					
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">보유 고객수</h6>
+				</div>
+				<img class="card-img-top" 
+				src="../resources/images/goods/goods1.jpg">
+				<div class="card-body">
+					<h6 class="card-title text-center">
+					<%=NumberUtil.numberWithComma(salesDao.getTotalUserCount())%> 명</h6>       
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">상품 종류수 </h6>
+				</div>
+				<img class="card-img-top" 
+				src="../resources/images/goods/goods1.jpg">
+				<div class="card-body">
+					<h6 class="card-title text-center">
+					<%=NumberUtil.numberWithComma(salesDao.getTotalProductCount())%> 개</h6>       
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">보유한 재고량</h6>
+				</div>
+				<img class="card-img-top" 
+				src="../resources/images/goods/goods1.jpg">
+				<div class="card-body">
+					<h6 class="card-title text-center">
+					<%=NumberUtil.numberWithComma(salesDao.getTotalStockCount())%> 개</h6>       
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-4">
+		<div class="col-3">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">오늘 매출액</h6>
+				</div>
+				<img class="card-img-top" 
+				src="../resources/images/goods/goods1.jpg">
+				<div class="card-body">
+					<h6 class="card-title text-center">
+					<%=NumberUtil.numberWithComma(0000)%> 원</h6>       
+				</div>
+			</div>
+		</div>
+		<div class="col-9">
+			<div class="card">
+				<div class="card-header">
+					<h6 class="text-center">최근 1주일 매출액 추이</h6>
+				</div>
+				<div class="card-body">
+					<canvas id="weekSales">							
+					</canvas>													
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+		
+</div>
+	
+	
+	
+	
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function showChart() {
+		
+		console.log("showChart");
+		
+		var d6DayAgo = document.getElementById("6DayAgo");
+		var d5DayAgo = document.getElementById("5DayAgo");
+		var d4DayAgo = document.getElementById("4DayAgo");
+		var d3DayAgo = document.getElementById("3DayAgo");
+		var d2DayAgo = document.getElementById("2DayAgo");
+		var d1DayAgo = document.getElementById("1DayAgo");
+		var d0DayAgo = document.getElementById("0DayAgo");
+		
+		var weekCanvas = document.getElementById('weekSales').getContext('2d');
+		var weekChart = new Chart(weekCanvas, { 
+			// 챠트 종류를 선택 
+			type: 'line', 
+			// 챠트를 그릴 데이타 
+			data: { 
+				labels: [d6DayAgo.name, d5DayAgo.name,
+					d4DayAgo.name, d3DayAgo.name, d2DayAgo.name,
+					d1DayAgo.name, d0DayAgo.name,], 
+				datasets: [{ 
+					label: '최근 일주일간 매출액 변화', 
+					backgroundColor: 'transparent', 
+					borderColor: 'blue', 
+					data: [d6DayAgo.value, d5DayAgo.value, d4DayAgo.value, 
+						d3DayAgo.value, d2DayAgo.value, d1DayAgo.value, 
+						d0DayAgo.value] 
+				}] 
+			}, // 옵션 
+			options: {} 
+		});	
+		
+		
+	}
+
+</script>
+
+
+
+</body>
+</html>

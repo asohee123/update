@@ -1,0 +1,113 @@
+<%@page import="semi.vo.Pagination"%>
+<%@page import="semi.util.NumberUtil"%>
+<%@page import="semi.dao.NoticeDao"%>
+<%@page import="semi.vo.Notice"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <style>
+  	a {
+  		color: black;
+  	}
+  </style>
+</head>
+<body>
+<%@ include file="/common/navibar.jsp" %>
+<%@ include file="/common/fixedbar.jsp" %>
+<div class="container">  	
+	<div class="row justify-content-center">
+		<h4>notice</h4>
+	</div>
+	<%
+		NoticeDao noDao = new NoticeDao();
+		
+		int pageNo = NumberUtil.stringToInt(request.getParameter("page"), 1);
+		int totalRows = noDao.getTotalRows();
+		
+		Pagination pagination = new Pagination(10, 5, pageNo, totalRows);
+		
+		List<Notice> notices = noDao.getAllNotice(pagination.getBeginIndex(), pagination.getEndIndex());
+	%>
+	<div class="col-12 mt-5" style="margin-top: 0;">			
+			<div>
+				<table class="table mt-5">
+					<colgroup>
+						<col width="10%">
+						<col width="80%">
+						<col width="10%">
+					</colgroup>
+					<thead >
+						<tr>
+							<th>no</th>
+							<th class="text-center">subject</th>
+							<th>name</th>
+						</tr>
+					</thead>
+					<tbody class="table-borderless">
+					<%
+						for(Notice notice : notices) {
+					%>						
+						<tr>
+							<td><%=notice.getNoticeNo() %></td>
+							<td><a href="noticeDetail.jsp?noticeno=<%=notice.getNoticeNo()%>"><%=notice.getTitle() %></a></td>
+							<td>관리자</td>
+						</tr>
+					<%
+						}		
+					%>
+					</tbody>
+				</table>
+			</div>
+			<%
+				if("admin".equals(userName)) {
+			%>
+			<div class="text-right">
+				<a class="btn btn-primary " href="insertNotice.jsp" role="button">글 작성</a>			
+			</div>
+			<%
+				}
+			%>
+			<div class="text-center mt-3">
+				<ul class="pagination justify-content-center">
+			<%
+				if (pagination.getPageNo() > 1) {
+			%>
+					<li class="page-item"><a class="page-link" href="notice.jsp?page=<%=pagination.getPageNo() - 1 %>">Previous</a></li>
+			<%
+				}
+			%>
+			
+			<%
+				for (int num=pagination.getBeginPage(); num<=pagination.getEndPage(); num++) {
+			%>
+					<li class="page-item <%=num==pageNo ? "active" : "" %>"><a class="page-link" href="notice.jsp?page=<%=num%>"><%=num %></a></li>
+			<%
+				}
+			%>			
+			
+			<%
+				if (pagination.getPageNo() < pagination.getTotalPages()) {
+			%>
+					<li class="page-item"><a class="page-link" href="notice.jsp?page=<%=pagination.getPageNo() + 1 %>">Next</a></li>
+			<%
+				}
+			%>		
+					
+				</ul>
+			</div>
+			
+		</div>
+</div>
+<%@ include file="/common/footer.jsp" %>
+</body>
+</html>

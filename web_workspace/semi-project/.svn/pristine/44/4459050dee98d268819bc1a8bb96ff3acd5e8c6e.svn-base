@@ -1,0 +1,483 @@
+<%@page import="semi.vo.Category"%>
+<%@page import="semi.dao.CategoryDao"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="semi.dto.ProductSalesDto"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.JsonArray"%>
+<%@page import="semi.dto.CategorySalesDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.SalesDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body onload="showChart()">
+<%@ include file="/common/navibar.jsp" %>
+<%
+	
+	SalesDao salesDao = new SalesDao();
+	CategoryDao categoryDao = new CategoryDao();
+	List<Category> categorys = categoryDao.getAllCategorys();
+	List<CategorySalesDto> sales = salesDao.getSalesByCategory();
+	
+	// CategorySalesDto에  매출액을 추가한다.
+	for( CategorySalesDto sale : sales) {
+		sale.setTotalSales(salesDao.getTotalSalesByCategoryNo(sale.getCategoryNo()));		
+	}
+	
+	// category가 일부 비어있다고 가정한다.
+	List<CategorySalesDto> testSales = new ArrayList<CategorySalesDto>();
+	// 일부가 비어있도록 설정
+	for (int i= 0; i < 2; i++) {
+		testSales.add(sales.get(i));
+	}
+	
+	System.out.println("카테고리 전부 출력 시작");
+	for (Category category : categorys) {
+		System.out.println(category.getCategoryNo() 
+				+ " " + category.getCategoryName());
+	}
+	System.out.println("카테고리 전부 출력 끝");
+	
+	// 최종 출력할 CategoryDto 배열
+	List<CategorySalesDto> finalSales = new ArrayList<CategorySalesDto>();
+	
+	for (Category category : categorys) {
+		CategorySalesDto finalSale = new CategorySalesDto();
+		finalSale.setCategoryNo(category.getCategoryNo());
+		finalSale.setCategoryName(category.getCategoryName());
+		finalSale.setSales(0);
+		finalSale.setTotalSales(0);	
+		
+		for (CategorySalesDto original : testSales) {			
+			if (original.getCategoryNo() == finalSale.getCategoryNo()) {
+				finalSale.setSales(original.getSales());
+				finalSale.setTotalSales(original.getTotalSales());
+			}
+		}	
+		
+		finalSales.add(finalSale);
+	}
+	
+	System.out.println("파이널 세일즈 시작");
+	for (CategorySalesDto test : finalSales) {
+		System.out.println(test.getCategoryNo() 
+				+ " " + test.getCategoryName() );
+		System.out.println("매출액 : " + test.getTotalSales() );
+	}
+	System.out.println("파이널 세일즈 끝");
+	
+%>
+
+<div class="container">  
+
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				System.out.println("form 부분 시작");
+			
+				//int cidx = 2;
+				for (CategorySalesDto sale : finalSales) {
+					System.out.println(sale.getCategoryNo() +" "+ sale.getSales());
+					List<ProductSalesDto> hotFive = salesDao.getAllProductSalesByCategoryNo(sale.getCategoryNo());
+			%>					
+				<div class="form-group row">
+					<label for="<%=sale.getCategoryNo() %>"><%=sale.getCategoryName() %></label>
+					<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+					<input type="number" id="<%=sale.getCategoryNo() %>TotalSales"
+					value="<%=sale.getTotalSales() %>" />
+					
+					
+				<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+				<input type="number" id="<%=sale.getCategoryNo() %>TotalSales"
+				value="<%=sale.getTotalSales() %>" />
+					
+			<%
+					//for (int i = 0; i<5; i++) {		
+					// product img와  name과  매출액 가져와서 value에 지정
+			%>					
+					
+					
+				</div>
+			<%
+					//cidx--;
+					//if (cidx == 0) {
+					//	break;
+					//}
+				}
+			
+				System.out.println("form 부분 끝");
+			%>	
+			</form>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-6">		
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 판매량</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChart">							
+					</canvas>																		      
+				</div>
+			</div>				
+		</div>
+		
+		<div class="col-6">
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 매출액</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChartSales">							
+					</canvas>																		      
+				</div>
+			</div>					
+		</div>		
+	</div>	
+	
+	<div class="row justify-content-md-center mt-3 mb-3">		
+		
+		<div class="col-12 text-center" >
+			<div class="card">
+				<div class="card-header">
+					<h5 class="text-center">카테고리 별 매출 1위</h5>
+				</div>				
+				<!-- 매출 카드 시작 -->	
+				<div class="card-body">
+					<div class="row justify-content-md-center">
+					
+						<div class="col-2">
+							<div class="card">
+								<div class="card-header">
+									Outer
+								</div>
+								<img class="card-img-top" 
+								src="../resources/images/goods/goods1.jpg">
+								<div class="card-body">
+									ㅇㅇㅇㅇ
+								</div>
+							</div>
+						</div>
+						<div class="col-2">
+							<div class="card">
+								<div class="card-header">
+									Outer
+								</div>
+								<div class="card-body">
+									ㅇㅇㅇㅇ
+								</div>
+							</div>
+						</div>
+						<div class="col-2">
+							<div class="card">
+								<div class="card-header">
+									Outer
+								</div>
+								<div class="card-body">
+									ㅇㅇㅇㅇ
+								</div>
+							</div>
+						</div>
+						<div class="col-2">
+							<div class="card">
+								<div class="card-header">
+									Outer
+								</div>
+								<div class="card-body">
+									ㅇㅇㅇㅇ
+								</div>
+							</div>
+						</div>
+						<div class="col-2">
+							<div class="card">
+								<div class="card-header">
+									Outer
+								</div>
+								<div class="card-body">
+									ㅇㅇㅇㅇ
+								</div>
+							</div>
+						</div>
+					</div>
+				</div> <!-- 매출 카드 끝 -->
+				
+			</div>								
+		</div>			
+		
+	</div> <!-- 매출 관련 div 끝 -->
+	
+	
+	
+		<div class="row">
+			
+			
+			<div class="row py-2">
+			</div>
+			
+			
+			<div class="row py-2">
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut1"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut2"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut3"></canvas>
+						</div>
+					</div>
+				</div>				
+			</div>
+			
+			</div>
+</div>
+	
+	
+	
+	
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function showChart() {
+		var colors = ['blue','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+			
+		/* 도넛 차트 세팅 */
+		var donutOptions = { 
+				cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+				legend: {position:'bottom', 
+						padding:5, 
+						labels: {pointStyle:'circle', 
+						usePointStyle:true}
+				} 
+		}; 		
+		
+		// myChart
+		
+		var outer = document.getElementById("10000");
+		var top = document.getElementById("10001");
+		var dress = document.getElementById("10002");
+		var knit = document.getElementById("10003");
+		var bottoms = document.getElementById("10004");
+		
+		var outerSales = document.getElementById("10000TotalSales");
+		var topSales = document.getElementById("10001TotalSales");
+		var dressSales = document.getElementById("10002TotalSales");
+		var knitSales = document.getElementById("10003TotalSales");
+		var bottomsSales = document.getElementById("10004TotalSales");
+		
+		console.log("여기서부터 onload");
+		console.log(outer.value);
+		console.log(top.value);
+		console.log(dress.value);
+		console.log(knit.value);
+		console.log(bottoms.value);
+		
+		console.log(outerSales.value);
+		console.log(topSales.value);
+		console.log(dressSales.value);
+		console.log(knitSales.value);
+		console.log(bottomsSales.value);
+		
+		console.log("끝 onload");
+		
+				
+		// 카테고리별 판매량
+		var myChartData = { 
+				labels: [outer.name, top.name, dress.name, knit.name, bottoms.name], 
+				datasets: [ { backgroundColor: colors.slice(0,5),
+							borderWidth: 0, 
+							data: [outer.value, top.value, dress.value, knit.value, bottoms.value] 
+							} ] 
+		}; 
+		
+		var myChart = document.getElementById("myChart"); 	
+		if (myChart) { 
+			new Chart(myChart, { 
+				type: 'pie', 
+				data: myChartData, 
+				options: donutOptions 
+				}); 
+			} 
+		
+		// 카테고리별 매출액
+		var ctx = document.getElementById("myChartSales"); 
+		var myChart2 = new Chart(ctx, {
+			type: 'bar',
+			data : {
+				labels: [outer.name, top.name, dress.name, knit.name, bottoms.name],
+				datasets: [{ label: 'Total Sales per Category ',
+							data: [outerSales.value, topSales.value, 
+								dressSales.value, knitSales.value, 
+								bottomsSales.value], 
+							backgroundColor: [ 'rgba(255, 99, 132, 0.2)', 
+								'rgba(54, 162, 235, 0.2)', 
+								'rgba(255, 206, 86, 0.2)', 
+								'rgba(75, 192, 192, 0.2)', 
+								'rgba(153, 102, 255, 0.2)', 
+								'rgba(255, 159, 64, 0.2)' ], 
+							borderColor: [ 'rgba(255, 99, 132, 1)', 
+								'rgba(54, 162, 235, 1)', 
+								'rgba(255, 206, 86, 1)', 
+								'rgba(75, 192, 192, 1)', 
+								'rgba(153, 102, 255, 1)', 
+								'rgba(255, 159, 64, 1)' ], 
+							borderWidth: 1 
+						}]
+			},
+			options: { 
+				scales: { 
+					yAxes: [{ 
+						ticks: { 
+							beginAtZero: true 
+							} 
+					}] 
+				} 
+			}
+
+		});	
+		
+		
+		
+		
+		
+	}
+
+</script>
+
+
+<script type="text/javascript">
+
+	
+	
+
+
+	var colors = ['red','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+	
+	
+	
+	/* 3 donut charts */
+	var donutOptions = { 
+			cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+			legend: {position:'bottom', 
+					padding:5, 
+					labels: {pointStyle:'circle', 
+					usePointStyle:true}
+			} 
+	}; 
+	
+	
+	// myChart
+	
+	var outer = document.getElementById("10000");
+	var top = document.getElementById("10001");
+	var dress = document.getElementById("10002");
+	var knit = document.getElementById("10003");
+	var bottoms = document.getElementById("10004");
+	
+	console.log(outer.value);
+	console.log(top.value);
+	console.log(dress.value);
+	console.log(knit.value);
+	console.log(bottoms.value);
+	
+	
+	
+	
+	
+	
+	
+	// donut 1 
+	var chDonutData1 = { 
+			labels: ['Bootstrap', 'Popper', 'Other'], 
+			datasets: [ { backgroundColor: colors.slice(0,3),
+						borderWidth: 0, 
+						data: [74, 11, 40] 
+						} ] 
+	}; 
+	
+	var chDonut1 = document.getElementById("chDonut1"); 	
+	if (chDonut1) { 
+		new Chart(chDonut1, { 
+			type: 'pie', 
+			data: chDonutData1, 
+			options: donutOptions 
+			}); 
+		} 
+	
+	// donut 2 
+	var chDonutData2 = { 
+			labels: ['Wips', 'Pops', 'Dags'],
+			datasets: [ { backgroundColor: colors.slice(0,3), 
+				borderWidth: 0, 
+				data: [40, 45, 30] } ] 
+	}; 
+	
+	var chDonut2 = document.getElementById("chDonut2"); 
+	
+	if (chDonut2) { 
+		new Chart(chDonut2, { 
+			type: 'pie', 
+			data: chDonutData2, 
+			options: donutOptions 
+			}
+		); 
+	} 
+	
+	// donut 3 
+	
+	var chDonutData3 = { 
+			labels: ['Angular', 'React', 'Other'], 
+			datasets: [ { backgroundColor: colors.slice(0,3), 
+			borderWidth: 0, data: [21, 45, 55, 33] } ] 
+	}; 
+	
+	var chDonut3 = document.getElementById("chDonut3"); 
+	
+	if (chDonut3) { 
+		new Chart(chDonut3, { 
+			type: 'pie', 
+			data: chDonutData3, 
+			options: donutOptions }); 
+	}
+	
+	
+	
+
+</script>
+
+</body>
+</html>

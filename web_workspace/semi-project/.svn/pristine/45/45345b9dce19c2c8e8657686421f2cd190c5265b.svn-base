@@ -1,0 +1,25 @@
+question.insertQuestion=insert into semi_question \
+						(question_no, product_no, question_content, user_id, question_title) \
+						values \
+						(QUESTION_SEQ.NEXTVAL, ? , ? , ?, ?)
+						
+question.getQuestionCnt=select count(*) \
+			  	  		from semi_question \
+			  	   		where product_no = ? 
+			  	   		
+question.getAllQuestion=select * \
+			 			from (select a.question_no, a.question_title, a.question_content, a.question_delyn, \
+				  		  	  row_number() over(order by a.question_no desc) rn, \
+				  		  	  b.user_name \
+				   	 		  from semi_question a, semi_user b \
+				    		  where a.question_delyn = 'N' \
+				    		  and a.user_id = b.user_id \
+				    		  and a.product_no = ? \
+				    		  order by a.question_no desc) \
+			  			where rn >= ? and rn <= ?
+
+question.getQuestionTotalRows=select count(*) cnt \
+							  from semi_question \
+				 			  where question_delyn = 'N' \
+				 			  and product_no = ?
+			  	   		

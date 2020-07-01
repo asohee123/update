@@ -1,0 +1,44 @@
+review.insertReview=insert into semi_review \
+					(review_no, user_id, product_no, review_content, review_title) \
+					values \
+					(REVIEW_SEQ.NEXTVAL, ?, ?, ?, ?)
+					
+review.getReviewsByProdNo=select A.review_no, A.review_title, A.review_content, \
+						  B.user_name, A.review_registered_date \
+						  from semi_review A, semi_user B \
+						  where A.user_id = B.user_id \
+						  and A.product_no = ? \
+						  order by A.review_no desc
+						  
+review.getContentByRevNo=select review_content \
+						 from semi_review \
+						 where review_no = ?
+						 
+review.modifyReview=update semi_review \
+					set review_title = ?, \
+					    review_content = ? \
+					where review_no = ?
+					
+review.deleteReview=update semi_review \
+					set \
+						review_delyn = 'Y' \
+					where review_no = ?
+					
+review.getReviewCnt=select count(*) reviewCnt \
+				 from semi_review \
+				 where product_no = ?
+				 
+review.getAllReview=select * \
+					from (select a.review_no, a.review_title, a.review_content, a.review_delyn, b.user_name, \
+    					  row_number() over(order by review_no desc) rn \
+   						  from semi_review a, semi_user b \
+     				      where review_delyn = 'N' \
+     					  and a.product_no = ? \
+     					  and a.user_id = b.user_id \
+     					  ) \
+					where rn >= ? and rn <=?
+					
+review.getTotalRows=select count(*) cnt \
+					from semi_review \
+					where review_delyn = 'N' \
+					and product_no = ?

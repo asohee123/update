@@ -1,0 +1,8 @@
+qna.getQnAByProdNo=select a.question_no, a.question_title, a.question_content, \
+						 b.user_name, c.answer_title, c.answer_content \
+					from semi_question a, semi_user b, semi_answer c \
+					where a.user_id = b.user_id \
+					and a.question_no = c.question_no(+) \
+					and a.product_no = ? \
+					order by question_no desc
+					

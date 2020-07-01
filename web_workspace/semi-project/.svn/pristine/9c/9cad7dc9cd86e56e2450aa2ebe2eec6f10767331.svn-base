@@ -1,0 +1,58 @@
+package semi.vo;
+
+import java.util.Date;
+
+public class PointHistory {
+	private int historyNo;
+	private String userId;
+	private String reason;
+	private int change;
+	private Date historyDate;
+	
+	public PointHistory() {}
+
+	public int getHistoryNo() {
+		return historyNo;
+	}
+
+	public void setHistoryNo(int historyNo) {
+		this.historyNo = historyNo;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public int getChange() {
+		return change;
+	}
+
+	public void setChange(int change) {
+		this.change = change;
+	}
+
+	public Date getHistoryDate() {
+		return historyDate;
+	}
+
+	public void setHistoryDate(Date historyDate) {
+		this.historyDate = historyDate;
+	}
+	
+	
+	
+	
+	
+}

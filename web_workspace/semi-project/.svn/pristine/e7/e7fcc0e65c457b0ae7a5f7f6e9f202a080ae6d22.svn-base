@@ -1,0 +1,76 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <style>
+  	strong {
+  		color: red;
+  	}
+  </style>
+</head>
+<body>
+<%
+	String error = request.getParameter("error");
+%>
+<%@ include file="../common/navibar.jsp" %>
+<%@ include file="/common/fixedbar.jsp" %>
+<div class="container">  
+
+	<div class="text-center">
+			<div class="header">
+				<h3>Login</h3>
+				<%
+					if("fail".equals(error)) {
+				%>
+					<p><strong>아이디와 비밀번호를 확인하세요!</strong></p>
+				<%
+					} else if("noresult".equals(error)) {
+				%>
+					<p><strong>회원 정보가 존재하지 않습니다.</strong></p>
+				<%
+					} else if("deny".equals(error)) {
+				%>
+					<p><strong>로그인이 필요합니다!</strong></p>
+				<%
+					} 
+				%>
+			</div>
+		<div class="body">
+			<div class="row justify-content-md-center">
+				<form method="post" action="loginSession.jsp">
+					<div class="form-group">
+						<label for="user-id"></label>
+						<input type="text" class="form-control" name="userid" id="user-id" placeholder="아이디" required/>
+					</div>
+					<div class="form-group">
+						<label for="user-pwd"></label>
+						<input type="password" class="form-control" name="userpwd" id="user-pwd" placeholder="비밀번호" required/>
+					</div>
+					<div class="text-right">
+						<button type="submit" class="btn">로그인</button>
+					</div>
+				</form>
+			</div>
+			<div class="row justify-content-md-center">
+			
+				<form method="post">
+					<div class="text-center">
+						<button type="button" class="btn" onclick="location='findIdForm.jsp'"> 아이디 찾기</button>
+						<button type="button" class="btn" onclick="location='findPasswordForm.jsp'">비밀번호 찾기</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<%@ include file="../common/footer.jsp" %>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<%@page import="semi.dto.DeliveryDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.DeliverDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<%@ include file="../common/navibar.jsp" %>
+<%@ include file="/common/fixedbar.jsp" %>
+<div class="container">  
+	<div class="row">
+		<div class="col-12">
+   			<div class="header text-center">
+   				<div class="row">
+   					<div class="col-12 pb-3 h2">
+   						배송 관리
+   					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%
+		DeliverDao deliDao = new DeliverDao();
+		List<Integer> orders = deliDao.getAllOrderNo();
+	%>
+	<%
+		if(orders.isEmpty()) {
+	%>
+	<div class="row">
+		<div class="text-center h4 mb-4"><label style="text-align: center;">조회할 배송내역이 없습니다.</label></div>
+	</div>
+	<%
+		} else {
+			for(int order : orders) {
+				int totalPoint = 0;
+				int totalPrice = 0;
+				String userid;
+	%>
+	<div class="row">
+		<table class="table" id="delivery">
+			<thead>
+				<tr>
+					<th>orderNo</th>
+					<th>user</th>
+					<th>order date</th>
+					<th>image</th>
+					<th>product name</th>
+					<th>qty</th>
+					<th>price</th>
+				</tr>
+			</thead>
+			<tbody>
+	<%
+				List<DeliveryDto> deliveries = deliDao.getDeliveryByOrderNo(order);
+				userid = null;
+				for(DeliveryDto delivery : deliveries) {
+					int orderPrice = delivery.getPrice() * delivery.getAmount();
+					totalPrice += orderPrice;
+	
+	%>
+				<tr>
+					<td><%=order %></td>
+					<td><%=delivery.getUserId() %></td>
+					<td><%=delivery.getOrderDate() %></td>
+					<td><img src="../resources/<%=delivery.getProductImg() %>" width="130" height="130"></td>
+					<td><%=delivery.getProductName() %></td>
+					<td><%=delivery.getAmount() %></td>
+					<td><%=delivery.getPrice() * delivery.getAmount()%></td>
+				</tr>
+	<%
+					userid = delivery.getUserId();
+				}
+	%>
+			</tbody>
+		</table>
+	</div>
+	<div class="row justify-content-center" style="padding-top: 5px; padding-bottom: 50px">
+		<button type="button" class="btn btn-success" onclick="deliver(<%=order%>, <%=totalPrice%>, '<%=userid%>')">배송</button>
+	</div>
+	<%
+			}
+		}
+	%>
+</div>
+<%@ include file="../common/footer.jsp" %>
+<script type="text/javascript">
+	function deliver(order, price, userid) {
+		var xhr = new XMLHttpRequest();
+		console.log(price);
+		xhr.onreadystatechange = function() {
+			if(xhr.readyState == 4 && xhr.status == 200) {
+				alert("배송 완료.");
+				location.reload(true);
+				
+			}
+		}
+		
+		// XHR 초기화
+		xhr.open("GET", "deliveryProcess.jsp?order=" + order + "&price=" + price + "&userid=" + userid);
+		// 서버로 요청보내기
+		xhr.send();
+	}
+</script>
+</body>
+</html>

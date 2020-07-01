@@ -1,0 +1,301 @@
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.JsonArray"%>
+<%@page import="semi.dto.CategorySalesDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.SalesDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body onload="showChart()">
+<%@ include file="/common/navibar.jsp" %>
+<%
+	
+	SalesDao salesDao = new SalesDao();
+	List<CategorySalesDto> sales = salesDao.getSalesByCategory();
+	
+	JsonArray arr = new JsonArray();
+		
+	for( CategorySalesDto sale : sales) {
+		JsonObject data = new JsonObject();	
+		data.addProperty("categoryNo", sale.getCategoryNo());
+		data.addProperty("categoryName", sale.getCategoryName());
+		data.addProperty("sales", sale.getSales());
+		
+		System.out.println("categoryNo: "+sale.getCategoryNo());
+		System.out.println("categoryName: "+sale.getCategoryName());
+		System.out.println("categorySales: "+sale.getSales());
+		
+		arr.add(data);
+	}
+	
+	//Gson gson = new Gson();
+	
+	//String result = gson.toJson(arr);
+	
+	//out.write(result);
+	
+%>
+
+<div class="container">  
+
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				System.out.println("sales/home.jsp");
+				for (CategorySalesDto sale : sales) {
+					System.out.println(sale.getCategoryNo() +" "+ sale.getSales());
+			%>					
+				<div class="form-group row">
+					<label for="<%=sale.getCategoryNo() %>"><%=sale.getCategoryName() %></label>
+					<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+				</div>
+			<%
+				}
+			%>	
+			</form>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-6">
+			<div class="row justify-content-md-center">
+				<div class="col text-center">
+					<h4>카테고리 별 판매량</h4>						
+				</div>
+			</div>
+			<!-- 카테고리별 매출  -->		
+			<div class= "row py-2">
+				<div class="col">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="myChart">							
+							</canvas>													
+						</div>
+					</div>
+				</div>			
+			</div>			
+		</div>
+		<div class="col-6">
+			
+			
+		</div>
+				
+		
+	</div>	
+		<div class="row">
+			
+			
+			<div class="row py-2">
+			</div>
+			
+			
+			<div class="row py-2">
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut1"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut2"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 py-1">
+					<div class="card">
+						<div class="card-body">
+							<canvas id="chDonut3"></canvas>
+						</div>
+					</div>
+				</div>				
+			</div>
+			
+			</div>
+</div>
+	
+	
+	
+	
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function showChart() {
+		var colors = ['blue','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+		
+		
+		
+		/* 3 donut charts */
+		var donutOptions = { 
+				cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+				legend: {position:'bottom', 
+						padding:5, 
+						labels: {pointStyle:'circle', 
+						usePointStyle:true}
+				} 
+		}; 
+		
+		
+		// myChart
+		
+		var outer = document.getElementById("10000");
+		var top = document.getElementById("10001");
+		var dress = document.getElementById("10002");
+		var knit = document.getElementById("10003");
+		var bottoms = document.getElementById("10004");
+		
+		console.log(outer.value);
+		console.log(top.value);
+		console.log(dress.value);
+		console.log(knit.value);
+		console.log(bottoms.value);
+		
+		
+		
+		
+		// 도넛 5 테스트
+		var myChartData = { 
+				labels: ["아우터", "탑", "드레스", "니트", "바텀"], 
+				datasets: [ { backgroundColor: colors.slice(0,5),
+							borderWidth: 0, 
+							data: [6, 3, 8, 12, 28] 
+							} ] 
+		}; 
+		
+		var myChart = document.getElementById("myChart"); 	
+		if (myChart) { 
+			new Chart(myChart, { 
+				type: 'pie', 
+				data: myChartData, 
+				options: donutOptions 
+				}); 
+			} 
+		
+		
+	}
+
+</script>
+
+
+<script type="text/javascript">
+
+	
+	
+
+
+	var colors = ['red','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+	
+	
+	
+	/* 3 donut charts */
+	var donutOptions = { 
+			cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+			legend: {position:'bottom', 
+					padding:5, 
+					labels: {pointStyle:'circle', 
+					usePointStyle:true}
+			} 
+	}; 
+	
+	
+	// myChart
+	
+	var outer = document.getElementById("10000");
+	var top = document.getElementById("10001");
+	var dress = document.getElementById("10002");
+	var knit = document.getElementById("10003");
+	var bottoms = document.getElementById("10004");
+	
+	console.log(outer.value);
+	console.log(top.value);
+	console.log(dress.value);
+	console.log(knit.value);
+	console.log(bottoms.value);
+	
+	
+	
+	
+	
+	
+	
+	// donut 1 
+	var chDonutData1 = { 
+			labels: ['Bootstrap', 'Popper', 'Other'], 
+			datasets: [ { backgroundColor: colors.slice(0,3),
+						borderWidth: 0, 
+						data: [74, 11, 40] 
+						} ] 
+	}; 
+	
+	var chDonut1 = document.getElementById("chDonut1"); 	
+	if (chDonut1) { 
+		new Chart(chDonut1, { 
+			type: 'pie', 
+			data: chDonutData1, 
+			options: donutOptions 
+			}); 
+		} 
+	
+	// donut 2 
+	var chDonutData2 = { 
+			labels: ['Wips', 'Pops', 'Dags'],
+			datasets: [ { backgroundColor: colors.slice(0,3), 
+				borderWidth: 0, 
+				data: [40, 45, 30] } ] 
+	}; 
+	
+	var chDonut2 = document.getElementById("chDonut2"); 
+	
+	if (chDonut2) { 
+		new Chart(chDonut2, { 
+			type: 'pie', 
+			data: chDonutData2, 
+			options: donutOptions 
+			}
+		); 
+	} 
+	
+	// donut 3 
+	
+	var chDonutData3 = { 
+			labels: ['Angular', 'React', 'Other'], 
+			datasets: [ { backgroundColor: colors.slice(0,3), 
+			borderWidth: 0, data: [21, 45, 55, 33] } ] 
+	}; 
+	
+	var chDonut3 = document.getElementById("chDonut3"); 
+	
+	if (chDonut3) { 
+		new Chart(chDonut3, { 
+			type: 'pie', 
+			data: chDonutData3, 
+			options: donutOptions }); 
+	}
+	
+	
+	
+
+</script>
+
+</body>
+</html>

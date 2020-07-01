@@ -1,0 +1,174 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.dto.QuestionDto;
+import semi.dto.ReviewDto;
+import semi.vo.Review;
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+
+public class ReviewDao {
+	public List<ReviewDto> getReviewsByProdNo(int productNo) throws SQLException {
+		List<ReviewDto> reviews = new ArrayList<ReviewDto>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("review.getReviewsByProdNo"));
+		pstmt.setInt(1, productNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			ReviewDto reviewDto = new ReviewDto();
+			reviewDto.setReviewNo(rs.getInt("review_no"));
+			reviewDto.setTitle(rs.getString("review_title"));
+			reviewDto.setContent(rs.getString("review_content"));
+			reviewDto.setUserName(rs.getString("user_name"));
+			reviewDto.setRegisteredDate(rs.getDate("review_registered_date"));
+			
+			reviews.add(reviewDto);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return reviews;
+	}
+	
+	public void insertReview(Review review) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("review.insertReview"));
+		pstmt.setString(1, review.getUserId());
+		pstmt.setInt(2, review.getProductNo());
+		pstmt.setString(3, review.getReviewContent());
+		pstmt.setString(4, review.getTitle());
+		
+		pstmt.executeUpdate();
+		pstmt.close();
+		connection.close();
+	}
+	
+	public Review getContentByRevNo(int reviewNo) throws SQLException {
+		Review reviewContent = null;
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("review.getContentByRevNo"));
+		pstmt.setInt(1, reviewNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			Review review = new Review();
+			review.setReviewContent(rs.getString("review_content"));
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return reviewContent;
+	}
+	
+	public void modifyReview(Review review) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("review.modifyReview"));
+		pstmt.setString(1, review.getTitle());
+		pstmt.setString(2, review.getReviewContent());
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	
+	public void deleteReview(int reviewNo) throws SQLException {
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("board.deleteReview"));
+		pstmt.setInt(1, reviewNo);
+		
+		pstmt.executeUpdate();
+		
+		pstmt.close();
+		connection.close();
+	}
+	
+	public int[] getReviewCnt(int productNo) throws SQLException {
+		int[] reviewQuestion = new int[2];
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt1 = connection.prepareStatement(QueryUtil.getSQL("review.getReviewCnt"));
+		PreparedStatement pstmt2 = connection.prepareStatement(QueryUtil.getSQL("question.getQuestionCnt"));
+		pstmt1.setInt(1, productNo);
+		pstmt2.setInt(1, productNo);
+		
+		ResultSet rs1 = pstmt1.executeQuery();
+		ResultSet rs2 = pstmt2.executeQuery();
+		
+		rs1.next();
+		rs2.next();
+		
+		reviewQuestion[0] = rs1.getInt(1);
+		reviewQuestion[1] = rs2.getInt(1);
+		
+		pstmt1.close();
+		pstmt2.close();
+		connection.close();
+		
+		return reviewQuestion;
+	}
+	
+	public List<ReviewDto> getAllReview(int productNo, int begin, int end) throws SQLException {
+		List<ReviewDto> reviews = new ArrayList<ReviewDto>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("review.getAllReview"));
+		pstmt.setInt(1, productNo);
+		pstmt.setInt(2, begin);
+		pstmt.setInt(3, end);
+		
+		System.out.println(productNo);
+		System.out.println(begin);
+		System.out.println(end);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while(rs.next()) {
+			ReviewDto reviewDto = new ReviewDto();
+			reviewDto.setReviewNo(rs.getInt("review_no"));
+			reviewDto.setTitle(rs.getString("review_title"));
+			reviewDto.setContent(rs.getString("review_content"));
+			reviewDto.setUserName(rs.getString("user_name"));
+			
+			reviews.add(reviewDto);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return reviews;
+	}
+	
+	public int getTotalRows(int productNo) throws SQLException {
+		int totalRows = 0;
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt;
+		pstmt = connection.prepareStatement(QueryUtil.getSQL("review.getTotalRows"));
+		pstmt.setInt(1, productNo);
+		
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		
+		totalRows = rs.getInt("cnt");
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return totalRows;
+	}
+}

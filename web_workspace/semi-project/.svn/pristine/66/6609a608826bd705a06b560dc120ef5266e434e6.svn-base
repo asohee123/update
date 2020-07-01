@@ -1,0 +1,56 @@
+package semi.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import semi.dto.QnADto;
+import semi.util.ConnectionUtil;
+import semi.util.QueryUtil;
+import semi.vo.Question;
+
+public class QuestionDao {
+	public void insertQuestion(Question question) throws SQLException{
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("question.insertQuestion"));
+		pstmt.setInt(1, question.getProductNo());
+		pstmt.setString(2, question.getContent());
+		pstmt.setString(3, question.getUserId());
+		pstmt.setString(4, question.getTitle());
+		
+		pstmt.executeUpdate();
+		pstmt.close();
+		connection.close();
+	}
+	
+	public List<QnADto> getQnAByProdNo(int productNo) throws SQLException {
+		List<QnADto> QnA = new ArrayList<QnADto>();
+		
+		Connection connection = ConnectionUtil.getConnection();
+		PreparedStatement pstmt = connection.prepareStatement(QueryUtil.getSQL("qna.getQnAByProdNo"));
+		pstmt.setInt(1, productNo);
+		ResultSet rs = pstmt.executeQuery();
+		
+		while (rs.next()) {
+			QnADto qnaDto = new QnADto();	
+			qnaDto.setQuestionNo(rs.getInt("question_no"));
+			qnaDto.setQuestionTitle(rs.getString("question_title"));
+			qnaDto.setQuestionContent(rs.getString("question_content"));
+			qnaDto.setAnswerContent(rs.getString("answer_content"));
+			qnaDto.setAnswerTitle(rs.getString("answer_title"));
+			qnaDto.setUserName(rs.getString("user_name"));
+			
+			QnA.add(qnaDto);
+		}
+		
+		rs.close();
+		pstmt.close();
+		connection.close();
+		
+		return QnA;
+	}
+	
+}

@@ -1,0 +1,469 @@
+<%@page import="semi.vo.User"%>
+<%@page import="semi.dao.UserDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title>Bootstrap 4 Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    #popup {
+      display: none;
+      position: fixed;
+      left: 650px;
+      top: 250px;
+      width: 600px;
+      border: 3px solid #aaa;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      background-color: white;
+      z-index: 999;
+   }
+  </style>
+</head>
+<body>
+<% 
+   String loginedUserId = (String)session.getAttribute("아이디");
+
+   UserDao userDao = new UserDao();
+   
+   User findUser = userDao.getUserById(loginedUserId);
+   
+   String userGrade = "";
+   if(findUser.getTotalOrderPrice() >= 500000) {
+		userGrade = "골드등급";
+	} else if(findUser.getTotalOrderPrice() >= 300000) {
+		userGrade = "실버등급";
+	} else if(findUser.getTotalOrderPrice() >= 100000) {
+		userGrade = "브론즈등급";
+	} else if(findUser.getTotalOrderPrice() < 100000) {
+		userGrade = "일반등급";
+	}
+%>
+<%@ include file="/common/loginProcess.jsp" %>	
+<%@ include file="../common/navibar.jsp" %>
+
+<div class="container">
+   <div class="row">
+      <div class="col-12">
+         <div class="row">
+            <div class="col-12">
+               <div class="navi text-center" >
+                </div>            
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-12">
+               <div class="header text-center">
+                  <div class="row">
+                     <div class="col-12 pb-3 h2">
+                        Profile
+                     </div>
+                  </div>
+                     <div class="row">
+                        <div class="col-12 pb-3">
+                           <div class="row">
+                              <div class="col-3"></div>
+                              <div class="col-6">
+                                 <div class="row">
+                                    <div class="col-8 my-auto">
+                                       <div><span style="font-weight: bold;"><%=findUser.getName() %></span>님은 현재 <strong><%=userGrade %></strong>입니다.</div>
+                                    </div>
+                                    <div class="col-4">
+                                    <div class="row">
+                                       <div class="col-12"><a class="text-dark" href="pointHistory.jsp">
+                                          <span style="font-weight: bold;">보유포인트</span>
+                                       </a></div>
+                                    </div>
+                                    <div class="row">
+                                       <div class="col-12 pr-10">
+                                          <%=findUser.getPoint() %>
+                                       </div>
+                                    </div>                               
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="col-3"></div>
+                           </div>
+                        </div>
+                     </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-12">
+               <div class="body">
+                  <div class="row">
+                        <div class="col-3"></div>
+                           <div class="col-6">
+                           <table class="table">
+                              <tr class="text-center h4">
+                                 <th width="33.3%"><a style="color: black;" href="../order/orderList.jsp">Order</a></th>
+                                 <th width="33.3%"><a style="color: black;" href="#">notice</a></th>
+                                 <th width="33.3%"><a style="color: black;http://localhost:8400/semi-project/home.jsp" href="profile.jsp">Profile</a></th>
+                              </tr>
+                           </table>
+                           <form id="my-form" method="post" action="">
+                             <div class="form-group row">
+                               <label for="inputEmail3" class="col-sm-2 col-form-label">아이디</label>
+                               <div class="col-sm-10">
+                                 <input type="text" class="form-control" readonly="readonly" id="inputId" value="<%=findUser.getUserId() %>">
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">비밀번호</label>
+                               <div class="col-sm-10">
+                                 <input type="password" class="form-control mb-1" id="inputPassword" name="password" onkeyup="valueCheck()">
+                                 <button type="button"  class="btn btn-success"  onclick="availablepasswordcheck()">비밀번호체크</button>
+								 <small>영문,숫자,특수문자 혼합하여 8자리~20자리 이내</small>
+                                 <p id="message1"></p><p id="message3"></p>
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">비밀번호확인</label>
+                               <div class="col-sm-10">
+                                 <input type="password" class="form-control" id="inputPasswordCheck" onkeyup="valueCheck2()">
+                                 <p id="message2"></p>
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">이름</label>
+                               <div class="col-sm-10">
+                                 <input type="text" class="form-control" readonly="readonly" id="inputName" value="<%=findUser.getName()%>">
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">주소</label>
+                               <div class="col-sm-10">
+                                 <input type="text" class="form-control" id="inputAddr" name="address" 
+                                 placeholder="변경하실 주소를 입력해주세요">
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">휴대전화</label>
+                               <div class="col-sm-10">
+                                 <input type="text" class="form-control" id="inputPhoneNumber" name="phoneNumber" 
+                                 placeholder="변경하실 휴대폰번호를 입력하세요" onblur="overlapphonenumbercheck(event)">
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <label for="inputPassword3" class="col-sm-2 col-form-label">이메일</label>
+                               <div class="col-sm-10">
+                                 <input type="text" class="form-control" id="inputEmail" name="email" 
+                                 placeholder="변경하실 이메일을 입력하세요" onblur="overlapeamilcheck(event)">
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <div class="col-sm-2">이메일 수신여부</div>
+                               <div class="col-sm-6">
+                                 <div class="form-check">
+                                   <label class="form-check-label pr-4 br-3" for="gridCheck1">
+                                   <input class="form-check-input" name="email" type="radio" id="agree">
+                                 			   동의함
+                                   </label>
+                                   <label class="form-check-label" for="gridCheck2">
+                                   <input class="form-check-input" name="email" type="radio" id="disagree">
+											동의안함
+                                   </label>
+                                 </div>
+                               </div>
+                             </div>
+                             <div class="form-group row">
+                               <div class="col-4"></div>
+                               <div class="col-2">
+                                 <button type="button" class="btn btn-primary" onclick="check(event, 'profileModifyForm.jsp')">Modify</button>
+                               </div>   
+                               <div class="col-3">
+                                 <a href="../home.jsp"><button type="button" class="btn btn-primary">Cancel</button></a>
+                               </div>
+                               <div class="col-3">
+                                 <button type="button" class="btn btn-primary" onclick="dropout(event)">Drop out</button>
+                               </div>
+                             </div>
+                             <div id="popup" >
+                              <h3>회원탈퇴</h3>
+                              <table class="table bordered">
+                                 <tbody>
+                                    <tr>
+                                       <th class="text-center">로그인시 입력한 비밀번호를 입력해주세요</th>
+                                    </tr>
+                                    <tr>
+                                       <td class="text-center"><input type="password" id="password"/></td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                              <hr/>
+                              <div class="text-center">
+                                 <button onclick="passwordCheck(event)">확인</button>
+                              </div>
+                              <div class="text-right">
+                                 <button onclick="closePopup()">닫기</button>
+                              </div>
+                           </div>
+                        </form>
+                           </div>
+                        <div class="col-3"></div>
+                     </div>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-12">
+               <div class="footer text-center">
+                  <%@ include file="../common/footer.jsp" %>
+               </div>
+            </div>
+         </div>
+      </div>   
+   </div>
+</div>
+<script type="text/javascript">
+      
+   
+   function valueCheck() {
+      var text = document.querySelector("#inputPassword").value;
+      var el = document.querySelector("#message1");
+      var el2 = document.querySelector("#message2");
+      
+      if (text.length >= 1 && text.length < 8) {
+         el.textContent = "길이가 너무 짧습니다.";
+         el.style.color = "red";
+         return;
+      } else if (text.length == 0) {
+         el.textContent = "";
+         return;
+      } else if (text.length > 16) {
+    	  el.textContent = "16글자를 넘을 수 없습니다."
+    	  el.style.color = "red";
+      } else if (text.length >= 8 && text.length <= 16) {
+    	  el.textContent = "";
+      } 
+      if (!text.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+    	  el.textContent = "비밀번호양식을 확인해주세요";
+    	  return;
+      }
+      
+   }
+   
+   
+   
+   function valueCheck2() {
+      var text1 = document.querySelector("#inputPassword").value;
+      var text2 = document.querySelector("#inputPasswordCheck").value;
+      
+      var el1 = document.querySelector("#message1");
+      var el2 = document.querySelector("#message2");
+      
+      if (text1 != text2) {
+         el2.textContent = "비밀번호가 일치하지 않습니다.";
+         el2.style.color = "red";
+         return;
+      } else if (text1 == text2 && text2.length != 0) {
+         el2.textContent = "비밀번호가 일치합니다";
+         el2.style.color = "blue";
+         return;
+      }
+      
+      if (!text1) {
+    	  el2.innerHTML = "";
+      }
+      
+   }
+   
+   
+   function check(event, url) {
+      
+      var el1 = document.querySelector("#message1");
+      var el2 = document.querySelector("#message2");
+      
+      var password1 = document.querySelector("#inputPassword");
+      var password2 = document.querySelector("#inputPasswordCheck");
+   	  var agree = document.querySelector("#agree");
+   	  var disagree = document.querySelector("#disagree");
+   	  
+   	  if (!password1.value || !password1.value.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+   		  alert("비밀번호를 확인해주세요");
+   		  password1.focus()
+   		  return;
+   	  }
+   	  
+   	  if(!password2.value) {
+   		  alert("비밀번호를 확인해주세요");
+   		  password2.focus();
+   		  return;
+   	  }
+   	  
+   	  var email = document.getElementsByName('email');
+   	  
+   	  var count = 0;
+ 	  for (var i=0; i<email.length; i++) {
+ 		  if (email[i].checked) {
+ 			  count++;
+ 		  }
+ 	  }
+ 	  
+ 	  if (count == 0) {
+ 		  alert("이메일 수신여부를 확인해주세요");
+ 		  return;
+ 	  }
+      
+      if("길이가 너무 짧습니다." == el1.textContent || "비밀번호가 일치하지 않습니다." == el2.textContent) {
+         alert("비밀번호를 다시 확인해주세요");
+         event.preventDefault();
+         return;
+         
+      } else {
+    	  var YN = this.availablepasswordcheck();
+    	  if (!YN) {
+	    	  event.preventDefault();
+	    	  return;
+    	  } else if (YN) {
+    		  
+		      var addr = document.querySelector("input[name=address]").value;
+		      var phone = document.querySelector("input[name=phoneNumber]").value;
+		      var email = document.querySelector("input[name=email]").value;
+		      
+			  var addr = addr ? addr : 'N';
+			  var phone = phone ? phone : 'N';
+			  var email = email ? email : 'N';
+			  
+			  
+			  document.querySelector("input[name=address]").value = addr;
+		      document.querySelector("input[name=phoneNumber]").value = phone;
+		      document.querySelector("input[name=email]").value = email;
+			  			  
+    		      		  
+		      var form = document.querySelector("#my-form");
+		      form.setAttribute("action", url)
+		      form.submit();
+    	  }
+      }
+   }
+   
+   function availablepasswordcheck() {
+		
+	   var password = document.querySelector("#inputPassword");
+	   
+	   if(password.value.length<8) {
+		    alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 8~16자를 입력해주세요.");
+		    return 0;
+		 } else if(!password.value.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+		    alert("비밀번호는 영문(대소문자구분),숫자,특수문자(~!@#$%^&*()-_? 만 허용)를 혼용하여 8~16자를 입력해주세요.");
+		    return 0;  
+		 } else {
+			 return 1;
+		 }
+	   
+	}
+   
+   
+   function dropout() {
+      
+      document.querySelector("#popup").style.display = "block";
+      //document.querySelector("").style.backgroundColor = "gray";
+      
+      /*
+      var userid = document.querySelector("#inputId").value;
+      
+      var form = document.querySelector("#my-form");
+      form.setAttribute("action", url + userid);
+      form.submit();
+      */
+   }
+   
+   function passwordCheck(event) {
+      
+      event.preventDefault();
+      
+      var url = 'dropout.jsp?userid='
+      
+      var password = document.querySelector("#password").value;
+      
+      var xhr = new XMLHttpRequest();
+      
+      xhr.onreadystatechange = function() {
+         if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = xhr.responseText;
+            var checkYN = JSON.parse(text);
+                  
+            if (checkYN) {
+               var userid = document.querySelector("#inputId").value;
+               
+               var form = document.querySelector("#my-form");
+               form.setAttribute("action", url + userid);
+               form.submit();
+            } else {
+               alert("비밀번호를 확인해주세요");
+               return;
+            }
+         }
+      }
+      
+      xhr.open("GET", "checkPassword.jsp?password=" + password);
+      
+      xhr.send();
+      
+   }
+   
+   function overlapphonenumbercheck(event) {
+      
+      var phoneNumber = event.target.value;
+      
+      var xhr = new XMLHttpRequest();
+      
+      xhr.onreadystatechange = function() {
+         if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = xhr.responseText;
+            var number = JSON.parse(text);
+            
+            if(number) {
+               alert("이미 존재하는 핸드폰번호입니다.");
+               document.querySelector("input[name=phoneNumber]").value = "";
+            }
+         }
+      }
+      
+      xhr.open("GET", "checkPhoneNumber.jsp?phonenumber=" + phoneNumber);
+      
+      xhr.send();
+   }
+   
+   function overlapeamilcheck(event) {
+      
+      var email = event.target.value;
+      
+      var xhr = new XMLHttpRequest();
+      
+      xhr.onreadystatechange = function() {
+         if (xhr.readyState == 4 && xhr.status == 200) {
+            var text = xhr.responseText;
+            var email = JSON.parse(text);
+            
+            if(email) {
+               alert("이미 존재하는 이메일입니다.");
+               document.querySelector("input[name=email]").value = "";
+            }
+         }
+      }
+      xhr.open("GET", "checkEmail.jsp?email=" + email);
+      
+      xhr.send();
+   }
+   
+   function closePopup() {
+      document.querySelector("#popup").style.display = "none";
+      document.querySelector("#my-form").style.backgroundColor = "white";
+   }
+   
+
+   
+</script>
+</body>
+</html>

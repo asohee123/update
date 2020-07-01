@@ -1,0 +1,4 @@
+pointHistory.insertHistory=insert into semi_point_history \
+			 			   (history_no, user_id, history_reason, history_change) \
+			 			   values \
+			 			   (POINT_HISTORY_SEQ.nextval, ?, ?, ?)

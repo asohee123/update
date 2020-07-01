@@ -1,0 +1,482 @@
+<%@page import="semi.dto.ProductImgDto"%>
+<%@page import="semi.dao.ProductDao"%>
+<%@page import="semi.vo.Category"%>
+<%@page import="semi.dao.CategoryDao"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="semi.dto.ProductSalesDto"%>
+<%@page import="com.google.gson.Gson"%>
+<%@page import="com.google.gson.JsonObject"%>
+<%@page import="com.google.gson.JsonArray"%>
+<%@page import="semi.dto.CategorySalesDto"%>
+<%@page import="java.util.List"%>
+<%@page import="semi.dao.SalesDao"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+</head>
+<body onload="showChart()">
+<%@ include file="/common/navibar.jsp" %>
+<%
+	SalesDao salesDao = new SalesDao();
+	CategoryDao categoryDao = new CategoryDao();
+	ProductDao productDao = new ProductDao();
+	List<Category> categorys = categoryDao.getAllCategorys();
+	List<CategorySalesDto> sales = salesDao.getSalesByCategory();
+	
+	// CategorySalesDto에  매출액을 추가한다.
+	for( CategorySalesDto sale : sales) {
+		sale.setTotalSales(salesDao.getTotalSalesByCategoryNo(sale.getCategoryNo()));		
+	}
+			
+	// 최종 출력할 CategoryDto 배열
+	List<CategorySalesDto> finalSales = new ArrayList<CategorySalesDto>();
+	
+	for (Category category : categorys) {
+		CategorySalesDto finalSale = new CategorySalesDto();
+		finalSale.setCategoryNo(category.getCategoryNo());
+		finalSale.setCategoryName(category.getCategoryName());
+		finalSale.setSales(0);
+		finalSale.setTotalSales(0);	
+		
+		for (CategorySalesDto original : sales) {			
+			if (original.getCategoryNo() == finalSale.getCategoryNo()) {
+				finalSale.setSales(original.getSales());
+				finalSale.setTotalSales(original.getTotalSales());
+			}
+		}	
+		
+		finalSales.add(finalSale);
+	}
+	
+%>
+
+<div class="container">  
+
+	<div class="row">
+		<div class="col" style="display: none;">
+			<form action="">
+			<%
+				//System.out.println("sales/home.jsp");
+				for (CategorySalesDto sale : finalSales) {
+					//System.out.println(sale.getCategoryNo() +" "+ sale.getSales());
+					List<ProductSalesDto> hotFive = salesDao.getAllProductSalesByCategoryNo(sale.getCategoryNo());
+			%>					
+				<div class="form-group row">
+					<label for="<%=sale.getCategoryNo() %>"><%=sale.getCategoryName() %></label>
+					<input type="text" class="form-control" 
+					value="<%=sale.getSales() %>" 
+					name="<%=sale.getCategoryName() %>"
+					id="<%=sale.getCategoryNo() %>"
+					disabled/>
+					<input type="number" id="<%=sale.getCategoryNo() %>TotalSales"
+					value="<%=sale.getTotalSales() %>" />				
+				</div>
+				
+			<%			
+					String productRanking = "";
+					// 5위 까지만 얻기
+					for (int i = 0; i<5; i++) {							
+					// product img와  name과  매출액 가져와서 value에 지정
+						productRanking = sale.getCategoryNo()+"hot"+i;
+						System.out.println(productRanking);
+						ProductImgDto product = productDao.getProductByNo(hotFive.get(i).getProductNo());
+						
+					
+			%>			
+				<div class="form-group row">
+					<input type="number"
+					value="<%=hotFive.get(i).getTotalSales() %>" 
+					name="<%=product.getProductName() %>"
+					id="<%=productRanking %>"
+					disabled/>
+					
+					<input type="text" id="<%=productRanking %>Img"
+					value="<%=product.getImg() %>" />	
+				</div>
+			<%
+					}
+				}
+			%>	
+			</form>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-6">		
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 총 판매량</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChart">							
+					</canvas>																		      
+				</div>
+			</div>				
+		</div>
+		
+		<div class="col-6">
+			<div class="card border-dark">
+				<div class="card-header">
+					<h6 class="text-center">카테고리별 총 매출액</h6>
+				</div>				
+				<div class="card-body">
+					<canvas id="myChartSales">							
+					</canvas>																		      
+				</div>
+			</div>					
+		</div>		
+	</div>	
+	
+	<div class="row justify-content-md-center mt-5 mb-3">		
+		
+		<div class="col-12 text-center" >
+			<div class="card border-dark" >
+				<div class="card-header">
+					<h6 class="text-center">카테고리 별 매출 1위</h6>
+				</div>				
+				<!-- 매출 카드 시작 -->	
+				<div class="card-body">
+					<div class="row justify-content-md-center">
+					
+						<div class="col-4">
+							<div class="card ">
+								<div class="card-header">
+									Outer
+								</div>
+								<img class="card-img-top" 
+								src="" id="outerRanking1Img">
+								<div class="card-body" id="outerBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Top
+								</div>
+								<img class="card-img-top" 
+								src="" id="topRanking1Img">
+								<div class="card-body" id="topBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Dress
+								</div>
+								<img class="card-img-top" 
+								src="" id="dressRanking1Img">
+								<div class="card-body" id="dressBody">
+									
+								</div>
+							</div>
+						</div>						
+					</div>
+					<div class="row justify-content-md-center mt-5">
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Knit
+								</div>
+								<img class="card-img-top" 
+								src="" id="knitRanking1Img">
+								<div class="card-body" id="knitBody">
+									
+								</div>
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="card">
+								<div class="card-header">
+									Bottoms
+								</div>
+								<img class="card-img-top" 
+								src="" id="bottomsRanking1Img">
+								<div class="card-body" id="bottomsBody">
+									
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div> <!-- 매출 카드 끝 -->
+				
+			</div>								
+		</div>			
+		
+	</div> <!-- 매출 관련 div 끝 -->
+	
+	
+	
+		
+</div>
+	
+	
+	
+	
+
+<%@ include file="/common/footer.jsp" %>
+
+<script type="text/javascript">
+
+	function showChart() {
+		var colors = ['blue','skyblue','yellowgreen','#c3e6cb','#dc3545','#6c757d']; 
+			
+		/* 도넛 차트 세팅 */
+		var donutOptions = { 
+				cutoutPercentage: 30, 	//도넛두께 : 값이 클수록 얇아짐 
+				legend: {position:'bottom', 
+						padding:5, 
+						labels: {pointStyle:'circle', 
+						usePointStyle:true}
+				} 
+		}; 		
+		
+		// myChart
+		
+		var outer = document.getElementById("10000");
+		var top = document.getElementById("10001");
+		var dress = document.getElementById("10002");
+		var knit = document.getElementById("10003");
+		var bottoms = document.getElementById("10004");
+		
+		var outerSales = document.getElementById("10000TotalSales");
+		var topSales = document.getElementById("10001TotalSales");
+		var dressSales = document.getElementById("10002TotalSales");
+		var knitSales = document.getElementById("10003TotalSales");
+		var bottomsSales = document.getElementById("10004TotalSales");
+		
+		console.log("여기서부터 onload");
+		console.log(outer.value);
+		console.log(top.value);
+		console.log(dress.value);
+		console.log(knit.value);
+		console.log(bottoms.value);
+		
+		console.log(outerSales.value);
+		console.log(topSales.value);
+		console.log(dressSales.value);
+		console.log(knitSales.value);
+		console.log(bottomsSales.value);
+		
+		console.log("끝 onload");
+		
+				
+		// 카테고리별 판매량
+		var myChartData = { 
+				labels: [outer.name, top.name, dress.name, knit.name, bottoms.name], 
+				datasets: [ { backgroundColor: colors.slice(0,5),
+							borderWidth: 0, 
+							data: [outer.value, top.value, dress.value, knit.value, bottoms.value] 
+							} ] 
+		}; 
+		
+		var myChart = document.getElementById("myChart"); 	
+		if (myChart) { 
+			new Chart(myChart, { 
+				type: 'pie', 
+				data: myChartData, 
+				options: donutOptions 
+				}); 
+			} 
+		
+		// 카테고리별 매출액
+		var ctx = document.getElementById("myChartSales"); 
+		var myChart2 = new Chart(ctx, {
+			type: 'bar',
+			data : {
+				labels: [outer.name, top.name, dress.name, knit.name, bottoms.name],
+				datasets: [{ label: 'Total Sales per Category ',
+							data: [outerSales.value, topSales.value, 
+								dressSales.value, knitSales.value, 
+								bottomsSales.value], 
+							backgroundColor: [ 'rgba(255, 99, 132, 0.2)', 
+								'rgba(54, 162, 235, 0.2)', 
+								'rgba(255, 206, 86, 0.2)', 
+								'rgba(75, 192, 192, 0.2)', 
+								'rgba(153, 102, 255, 0.2)', 
+								'rgba(255, 159, 64, 0.2)' ], 
+							borderColor: [ 'rgba(255, 99, 132, 1)', 
+								'rgba(54, 162, 235, 1)', 
+								'rgba(255, 206, 86, 1)', 
+								'rgba(75, 192, 192, 1)', 
+								'rgba(153, 102, 255, 1)', 
+								'rgba(255, 159, 64, 1)' ], 
+							borderWidth: 1 
+						}]
+			},
+			options: { 
+				scales: { 
+					yAxes: [{ 
+						ticks: { 
+							beginAtZero: true 
+							} 
+					}] 
+				} 
+			}
+
+		});	
+		
+		// 여기서 부터 
+		
+		var outerhot0= document.getElementById("10000hot0");
+		var outerhot1= document.getElementById("10000hot1");
+		var outerhot2= document.getElementById("10000hot2");
+		var outerhot3= document.getElementById("10000hot3");
+		var outerhot4= document.getElementById("10000hot4");
+		
+		var tophot0= document.getElementById("10001hot0");
+		var tophot1= document.getElementById("10001hot1");
+		var tophot2= document.getElementById("10001hot2");
+		var tophot3= document.getElementById("10001hot3");
+		var tophot4= document.getElementById("10001hot4");
+		
+		var dresshot0= document.getElementById("10002hot0");
+		var dresshot1= document.getElementById("10002hot1");
+		var dresshot2= document.getElementById("10002hot2");
+		var dresshot3= document.getElementById("10002hot3");		
+		var dresshot4= document.getElementById("10002hot4");
+		
+		var knithot0= document.getElementById("10003hot0");
+		var knithot1= document.getElementById("10003hot1");
+		var knithot2= document.getElementById("10003hot2");
+		var knithot3= document.getElementById("10003hot3");
+		var knithot4= document.getElementById("10003hot4");
+				
+		var bottomshot0= document.getElementById("10004hot0");
+		var bottomshot1= document.getElementById("10004hot1");
+		var bottomshot2= document.getElementById("10004hot2");
+		var bottomshot3= document.getElementById("10004hot3");
+		var bottomshot4= document.getElementById("10004hot4");
+		
+		console.log(outerhot0.id);
+		console.log(outerhot0.name);
+		console.log(outerhot0.value);
+		
+		// outer top
+		var outerbody = document.querySelector("#outerBody");
+				
+		outerBody.innerHTML = "<div><strong class='float-left'>"
+		+ "1위 " + outerhot0.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(outerhot0.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "2위 " + outerhot1.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(outerhot1.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "3위 " + outerhot2.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(outerhot2.value)+"원</span></div>"
+		
+		;
+				
+		// top top
+		var topbody = document.querySelector("#topBody");
+				
+		topBody.innerHTML = "<div><strong class='float-left'>"
+		+ "1위 " + tophot0.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(tophot0.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "2위 " + tophot1.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(tophot1.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "3위 " + tophot2.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(tophot2.value)+"원</span></div>"
+		
+			
+		;
+		
+		// dress top
+		var dressbody = document.querySelector("#dressBody");
+				
+		dressBody.innerHTML = "<div><strong class='float-left'>"
+		+ "1위 " + dresshot0.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(dresshot0.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "2위 " + dresshot1.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(dresshot1.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "3위 " + dresshot2.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(dresshot2.value)+"원</span></div>"
+		
+		;
+		
+		// knit top
+		var knitbody = document.querySelector("#knitBody");
+				
+		knitBody.innerHTML = "<div><strong class='float-left'>"
+		+ "1위 " + knithot0.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(knithot0.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "2위 " + knithot1.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(knithot1.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "3위 " + knithot2.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(knithot2.value)+"원</span></div>"
+		
+		;
+		
+		// bottoms top
+		var bottomsbody = document.querySelector("#bottomsBody");
+				
+		bottomsBody.innerHTML = "<div><strong class='float-left'>"
+		+ "1위 " + bottomshot0.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(bottomshot0.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "2위 " + bottomshot1.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(bottomshot1.value)+"원</span></div>"
+		+ "<div><strong class='float-left'>"
+		+ "3위 " + bottomshot2.name+"</strong> <span  class='float-right'>"
+		+ numberWithCommas(bottomshot2.value)+"원</span></div>"
+			
+		;
+		
+		
+		
+		// outer Top IMAGE
+		var outerTopImg= document.getElementById("10000hot0Img");		
+		var outerImgCanvas = document.getElementById("outerRanking1Img")		
+		outerImgCanvas.src = "../resources/"+outerTopImg.value;
+		
+		// Top Top IMAGE
+		var topTopImg= document.getElementById("10001hot0Img");		
+		var topImgCanvas = document.getElementById("topRanking1Img")		
+		topImgCanvas.src = "../resources/"+topTopImg.value;
+		
+		// dress Top IMAGE
+		var dressTopImg= document.getElementById("10002hot0Img");		
+		var dressImgCanvas = document.getElementById("dressRanking1Img")		
+		dressImgCanvas.src = "../resources/"+dressTopImg.value;
+		
+		// knit Top IMAGE
+		var knitTopImg= document.getElementById("10003hot0Img");		
+		var knitImgCanvas = document.getElementById("knitRanking1Img")		
+		knitImgCanvas.src = "../resources/"+knitTopImg.value;
+		
+		// bottoms Top IMAGE
+		var bottomsTopImg= document.getElementById("10004hot0Img");		
+		var bottomsImgCanvas = document.getElementById("bottomsRanking1Img")		
+		bottomsImgCanvas.src = "../resources/"+bottomsTopImg.value;
+	}
+
+	function numberWithCommas(x) {
+	    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+	
+</script>
+
+
+
+
+</body>
+</html>

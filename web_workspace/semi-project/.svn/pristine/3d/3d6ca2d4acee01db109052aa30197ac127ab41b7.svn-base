@@ -1,0 +1,4 @@
+category.getAllCategorys=select category_no, category_name \
+						 from semi_category
+
+

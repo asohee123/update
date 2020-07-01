@@ -1,0 +1,106 @@
+sales.getSalesByCategory=select D.category_no, D.sales, E.category_name \
+						 from ( select c.category_no, count(*) sales \
+						 		from semi_ordered_product A, \
+						 			 semi_product_items B, \
+						 			 semi_product C \
+						 		where A.item_no = B.item_no \
+								and C.product_no = B.product_no \
+								group by c.category_no) D, semi_category E \
+						 where d.category_no = E.category_no \
+						 order by D.sales desc
+						 
+sales.getTotalSalesByCategoryNo=select I.category_no, sum(g.total_product) sales_by_category \
+							  	from( \
+							   		select F.product_no, sum(f.product_sales) total_product \
+							    	from( \
+							        	select d.item_no, nvl(c.item_sales,0) product_sales, e.product_no \
+							        	from ( \
+							            	select A.item_no, \
+								            sum(a.ordered_amount* a.ordered_price) item_sales \
+								            from semi_ordered_product A, semi_product_items B \
+								            where A.item_no = B.item_no \
+								            group by a.item_no \
+								            order by A.item_no \
+								        ) C, semi_product_items D, semi_product E \
+								        where c.item_no(+) = d.item_no \
+								        and d.product_no = e.product_no \
+							    	) F \
+								    group by f.product_no \
+								    order by f.product_no \
+								 )G, semi_product H, semi_category I \
+								 where G.product_no = H.product_no \
+								 and H.category_no = I.category_no \
+								 and I.category_no = ? \
+								 group by I.category_no \
+								 order by sales_by_category desc \						 
+						
+sales.getAllProductSalesByCategoryNo=select F.product_no, sum(f.product_sales) total_sales \
+									 from( \
+									     select d.item_no, nvl(c.item_sales,0) product_sales, \
+									      		e.product_no, e.category_no \
+									     from ( \
+									     	select A.item_no, \
+									     		   sum(a.ordered_amount* a.ordered_price) item_sales \
+									       	from semi_ordered_product A, semi_product_items B \
+									        where A.item_no = B.item_no \
+									        group by a.item_no \
+									        order by A.item_no \
+									    ) C, semi_product_items D, semi_product E \
+									    where c.item_no(+) = d.item_no \
+									    and d.product_no = e.product_no \
+									    and e.category_no = ? \
+									) F, semi_product G \
+									where F.product_no = g.product_no \
+									group by f.product_no \
+									order by total_sales desc \						
+		
+sales.getTotalSales=select sum(order_price) total_sales \
+					from semi_order 
+					
+sales.getTotalUserCount=select count(*) total_user_count \
+						from semi_user \
+						where user_leave like 'N' \
+						and user_id not in ('admin') 
+
+sales.getTotalStockCount=select sum(product_stock) total_stock \
+						 from semi_product_items						
+						
+sales.getTotalProductCount=select count(*) total_product \
+						   from semi_product						
+						
+sales.getRecentWeekSales=select B.week week, nvl(A.day_sale,0) weekSales \
+						 from (select to_CHAR(order_date, 'YYYYMMDD') SALE_DATE, \
+						 	   NVL(SUM(order_price),0) day_sale \
+						 	   from semi_order \
+						 	   WHERE to_CHAR(order_date, 'YYYYMMDD') > TO_CHAR(SYSDATE, 'YYYYMMDD')-7 \
+						 	   group by to_CHAR(order_date, 'YYYYMMDD') \
+						 	   ORDER BY SALE_DATE) A, \
+						 	   (SELECT TO_CHAR(sysdate-7 + LEVEL, 'YYYYMMDD') AS week \
+						 	   FROM DUAL \
+						 	   CONNECT BY LEVEL <= 7 \
+						 	   ) B \
+						 where B.week = A.sale_date(+) \
+						 order by B.week					
+					
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
