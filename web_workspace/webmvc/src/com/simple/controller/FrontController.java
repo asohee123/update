@@ -7,6 +7,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.simple.controller.book.AddController;
+import com.simple.controller.book.DeleteReviewController;
+import com.simple.controller.book.DetailController;
+import com.simple.controller.book.FormController;
+import com.simple.controller.book.ListController;
+import com.simple.controller.login.LoginCheckController;
+import com.simple.controller.login.LoginFormController;
+import com.simple.controller.login.LogoutController;
+
 public class FrontController extends HttpServlet{
 
 	@Override
@@ -28,14 +37,22 @@ public class FrontController extends HttpServlet{
 			// 요청URI에 해당하는 요청을 처리할 적절한 컨트롤러객체 생성하기
 			if("/home.hta".equals(requestURI)) {
 				controller = new HomeController();
-			} else if("/list.hta".equals(requestURI)) {
+			} else if("/book/list.hta".equals(requestURI)) {
 				controller = new ListController();
-			} else if("/detail.hta".equals(requestURI)) {
+			} else if("/book/detail.hta".equals(requestURI)) {
 				controller = new DetailController();
-			} else if("/form.hta".equals(requestURI)) {
+			} else if("/book/form.hta".equals(requestURI)) {
 				controller = new FormController();
-			} else if("/add.hta".equals(requestURI)) {
+			} else if("/book/add.hta".equals(requestURI)) {
 				controller = new AddController();
+			} else if("/login/form.hta".equals(requestURI)) {
+				controller = new LoginFormController();
+			} else if("/login/check.hta".equals(requestURI)) {
+				controller = new LoginCheckController();
+			} else if("/login/out.hta".equals(requestURI)) {
+				controller = new LogoutController();
+			} else if("/book/delReview.hta".equals(requestURI)) {
+				controller = new DeleteReviewController();
 			} else {
 				controller = new HomeController();
 			}

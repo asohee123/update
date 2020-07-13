@@ -14,15 +14,17 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </head>
 <body>
+<%@ include file="common/nav.jsp" %>
 <div class="container">
 	<div class="row">
 		<div class="col-12">
-			<h1>Home</h1><small><a href="list.hta">list</a></small>
+			<h1>Home</h1>
 		</div>
 	</div>
 	
 	<div class="row">
 		<div class="col-12">
+		<h3>최근 등록된 책 <small><a href="book/list.hta">list</a></small></h3>
 			<table class="table">
 				<thead>
 					<tr>

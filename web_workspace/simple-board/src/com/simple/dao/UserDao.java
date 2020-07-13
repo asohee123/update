@@ -28,7 +28,6 @@ public class UserDao {
 			user.setPassword(rs.getString("user_password"));
 			user.setName(rs.getString("user_name"));
 			user.setEmail(rs.getString("user_email"));
-			user.setDisabled(rs.getString("user_disabled"));
 			user.setCreateDate(rs.getDate("user_create_date"));
 			
 		}

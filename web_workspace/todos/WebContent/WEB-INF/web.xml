@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd" id="WebApp_ID" version="4.0">
+   
+   <!-- 초기화 파라미터 정의 -->
+   <context-param>
+   		<param-name>db.url</param-name>
+   		<param-value>jdbc:oracle:thin:@localhost:1521:xe</param-value>
+   </context-param>
+   
+   <context-param>
+   		<param-name>db.driverClassName</param-name>
+   		<param-value>oracle.jdbc.OracleDriver</param-value>
+   </context-param>
+   
+   <context-param>
+   		<param-name>db.username</param-name>
+   		<param-value>hr</param-value>
+   </context-param>
+   
+   <context-param>
+   		<param-name>db.password</param-name>
+   		<param-value>zxcv1234</param-value>
+   </context-param>
+   
+   <!-- 리스너 배포 -->
+   <listener>
+   		<listener-class>com.simple.listener.DBCPInitializerListener</listener-class>
+   </listener>
+   
+   <!-- 필터 배포 -->
+   <filter>
+      <filter-name>loggingFilter</filter-name>
+      <filter-class>com.simple.filter.LoggerFilter</filter-class>
+   </filter>
+   <filter>
+      <filter-name>logincheckFilter</filter-name>
+      <filter-class>com.simple.filter.LoginCheckFilter</filter-class>
+      <!--
+      		* 필터초기화에 필요한 정보를 설정한다.
+      		* FilterConfig객체에 저장된다.
+      		* Filter객체의 init(FilterConfig config)메소드가 실행될 때
+			    설정정보가 저장된 FilterConfig객체를 전달받는다.
+      -->
+      <init-param>
+      	<param-name>checkURL</param-name>
+      	<param-value>/todo/list.hta</param-value>
+      </init-param>
+      <init-param>
+      	<param-name>uncheckURL</param-name>
+      	<param-value>/home.hta, /todo/detail.hta</param-value>
+      </init-param>
+   </filter>
+   
+   <filter-mapping>
+      <filter-name>loggingFilter</filter-name>
+      <url-pattern>*.hta</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>logincheckFilter</filter-name>
+      <url-pattern>*.hta</url-pattern>
+   </filter-mapping>
+   
+   <!-- 서블릿 배포 -->
+   <servlet>
+      <servlet-name>frontController</servlet-name>
+      <servlet-class>kr.co.jhta.mvc.servlet.FrontControllerServlet</servlet-class>
+      <init-param>
+         <param-name>packages</param-name>
+         <param-value>com.simple.controller</param-value>
+      </init-param>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>frontController</servlet-name>
+      <url-pattern>*.hta</url-pattern>
+   </servlet-mapping>
+     
+</web-app>

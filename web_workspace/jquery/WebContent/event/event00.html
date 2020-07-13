@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	function $(exp) {
+		var arr = document.querySelectorAll(exp);
+		
+		return {
+			items: arr,
+			hide: function() {
+				var elements = this.items;
+				for(var i = 0; i<elements.length; i++){
+					var el = elements[i];
+					el.style.display = "none";
+				}
+				return this;
+			},
+			show: function() {
+				var elements = this.items;
+				for(var i = 0; i<elements.length; i++){
+					var el = elements[i];
+					el.style.display = "block";
+				}
+				return this;
+			}
+		}
+	}
+</script>
+</head>
+<body>
+	<h1>함수 연습</h1>
+	
+	<div>
+		<p>연습1</p>
+		<p>연습2</p>
+		<p>연습3</p>
+		<p>연습4</p>
+		<p>연습5</p>
+	</div>
+	<div>
+		<button onclick="hideAll()">삭제하기</button>
+	</div>
+<script type="text/javascript">
+	function hideAll(){
+		$('p'),hide();
+	}
+</script>
+</body>
+</html>

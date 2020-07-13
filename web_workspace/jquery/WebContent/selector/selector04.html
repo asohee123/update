@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+   <h1>자식 필터 선택자와 순서 필터 선택자</h1>
+   
+   <table border="1" style="width: 100%;">
+      <thead>
+         <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>저자</th>
+            <th>가격</th>
+         </tr>
+      </thead>
+      <tbody>
+         <tr>
+            <td>1</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+         <tr>
+            <td>2</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+         <tr>
+            <td>3</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+         <tr>
+            <td>4</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+         <tr>
+            <td>5</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+         <tr>
+            <td>6</td>
+            <td>이것이 자바다</td>
+            <td>신용권</td>
+            <td>35,000원</td>
+         </tr>
+      </tbody>
+   </table>
+   <hr/>
+   <div>
+      <button onclick="fn1()">tbody의 자식중에서 첫번째 tr 선택하기</button>
+      <button onclick="fn2()">tbody의 자식중에서 마지막번째 tr 선택하기</button>
+      <button onclick="fn3()">tbody의 자식중에서 두번째 tr 선택하기</button>
+      <button onclick="fn4()">tr의 자식중에서 첫번째 td 선택하기</button>
+      <button onclick="fn5()">tr의 자식중에서 마지막번째 td 선택하기</button>
+      <button onclick="fn6()">tr의 자식중에서 두번째 td 선택하기</button>
+      
+      <button onclick="fn7()">tbody의 tr중에서 두번째 tr (인덱스 관점에서) 선택하기</button>
+      <button onclick="fn8()">tbody의 tr중에서 두번째 tr 앞에 있는 모든 tr (인덱스 관점에서) 선택하기</button>
+      <button onclick="fn9()">tbody의 tr중에서 두번째 tr 다음에 있는 모든 tr (인덱스 관점에서) 선택하기</button>
+   </div>
+   
+<script type="text/javascript" src="../resources/js/jquery/jquery-3.5.1.min.js"></script>
+<script type="text/javascript">
+   function fn1() {
+      //$("tbody tr:first-child").remove();
+      //$("tbody tr:nth-child(1)").remove();   // nth : 순서 1부터 시작   eq : 순서 0부터 시작
+      $("tbody tr:eq(0)").remove();         // eq(0) : 순서가 0번째인거
+   }
+   function fn2() {
+      //$("tbody tr:last-child").remove();
+      //$("tbody tr:nth-child(4)").remove();
+      $("tbody tr:eq(3)").remove();
+   }
+   function fn3() {
+      //$("tbody tr:nth-child(2)").remove();
+      $("tbody tr:eq(1)").remove();
+   }
+   function fn4() {
+      $("tbody tr td:first-child").css("text-align", "center");
+      $("tbody tr td:nth-child(4n+1)").css("color", "red");
+      //$("tbody tr td:eq(0)").css("color", "red"); 사용불가
+   }
+   function fn5() {
+      //$("tbody tr td:last-child").css("text-align", "right");
+      //$("tbody tr td:nth-child(4n)").css("color", "green");
+   }
+   function fn6() {
+      //$("tbody tr td:nth-child(2)").css("text-align", "center");   
+      //$("tbody tr td:nth-child(4n+2)").css("color", "blue");   
+   }
+   function fn7() {
+      $("tbody tr:eq(1)").css('color', 'red');
+   }
+   function fn8() {
+      $("tbody tr:lt(1)").css('color', 'blue');
+   }
+   function fn9() {
+      $("tbody tr:gt(1)").css('color', 'green');
+   }
+</script>
+</body>
+</html>
